@@ -1,0 +1,33 @@
+.main{
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-items: center;
+    align-items: center;
+}
+.left{
+    width: 50%;
+}
+.right{
+    width: 50%;
+}
+.webCam{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+video{
+    height: 350px;
+    width: auto;
+    border-radius: 10px;
+}
+button{
+    background-color: #0284c7;
+    width: 300px;
+    padding: 10px 30px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    color: white;
+}
