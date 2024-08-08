@@ -1,6 +1,8 @@
+/* eslint-disable react/no-unescaped-entities */
 import { useEffect, useRef, useState } from 'react';
 import Webcam from 'react-webcam';
 import './App.css';
+import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 
 const Recorder = () => {
   const webcamRef = useRef(null);
@@ -8,6 +10,12 @@ const Recorder = () => {
   const [capturing, setCapturing] = useState(false);
   const [recordedChunks, setRecordedChunks] = useState([]);
   const [videoUrl, setVideoUrl] = useState(null);
+  const {
+    transcript,
+    listening,
+    resetTranscript,
+    browserSupportsSpeechRecognition
+  } = useSpeechRecognition();
 
   useEffect(() => {
     if (webcamRef.current && webcamRef.current.video) {
@@ -18,6 +26,7 @@ const Recorder = () => {
   const handleStartCaptureClick = () => {
     setCapturing(true);
     setVideoUrl(null); 
+    resetTranscript();
     mediaRecorderRef.current = new MediaRecorder(webcamRef.current.stream, {
       mimeType: 'video/webm',
     });
@@ -25,6 +34,7 @@ const Recorder = () => {
       'dataavailable',
       handleDataAvailable
     );
+    SpeechRecognition.startListening({ continuous: true })
     mediaRecorderRef.current.start();
   };
 
@@ -44,6 +54,7 @@ const Recorder = () => {
       setVideoUrl(url);
       setRecordedChunks([]);
     }
+    SpeechRecognition.stopListening();
     setCapturing(false);
   };
 
@@ -57,6 +68,10 @@ const Recorder = () => {
       setRecordedChunks([]);
     }
   };
+
+  if (!browserSupportsSpeechRecognition) {
+    return <span style={{fontSize:"20px"}}>Browser doesn't support speech recognition.</span>;
+  }
 
   return (
     <div className='webCam'>
@@ -82,7 +97,13 @@ const Recorder = () => {
       {recordedChunks.length > 0 && (
         <button onClick={handleSave}>Watch Preview</button>
       )}
-      
+      {
+        listening ? (
+          <p>Listening...</p>
+        ):(
+          <p>{transcript}</p>
+        )
+      }
     </div>
   );
 };
