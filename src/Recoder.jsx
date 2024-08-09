@@ -3,6 +3,8 @@ import { useEffect, useRef, useState } from 'react';
 import Webcam from 'react-webcam';
 import './App.css';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
+import isAndroid from './isAndroid';
+import SpeechRecognitionTest from './Android';
 
 const Recorder = () => {
   const webcamRef = useRef(null);
@@ -75,6 +77,12 @@ const Recorder = () => {
     return <span style={{ fontSize: "20px" }}>Browser doesn't support speech recognition.</span>;
   }
 
+  if(isAndroid){
+    return (
+      <SpeechRecognitionTest/>
+    )
+  }
+
   return (
     <div className='webCam'>
       {videoUrl ? (
@@ -97,7 +105,7 @@ const Recorder = () => {
       {recordedChunks.length > 0 && (
         <button onClick={handleSave}>Watch Preview</button>
       )}
-      <p>{finalTranscript}</p>
+      <p>{finalTranscript ? finalTranscript : "error"}</p>
     </div>
   );
 };
