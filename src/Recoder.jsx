@@ -10,12 +10,8 @@ const Recorder = () => {
   const [capturing, setCapturing] = useState(false);
   const [recordedChunks, setRecordedChunks] = useState([]);
   const [videoUrl, setVideoUrl] = useState(null);
-  const {
-    transcript,
-    listening,
-    resetTranscript,
-    browserSupportsSpeechRecognition
-  } = useSpeechRecognition();
+  const [finalTranscript, setFinalTranscript] = useState("");
+  const { transcript, listening, resetTranscript, browserSupportsSpeechRecognition } = useSpeechRecognition();
 
   useEffect(() => {
     if (webcamRef.current && webcamRef.current.video) {
@@ -23,18 +19,22 @@ const Recorder = () => {
     }
   }, [webcamRef]);
 
+  useEffect(() => {
+    if (listening) {
+      setFinalTranscript(transcript); // Update the final transcript immediately as the user speaks
+    }
+  }, [transcript, listening]);
+
   const handleStartCaptureClick = () => {
     setCapturing(true);
-    setVideoUrl(null); 
+    setVideoUrl(null);
     resetTranscript();
+    setFinalTranscript(""); // Reset the final transcript
     mediaRecorderRef.current = new MediaRecorder(webcamRef.current.stream, {
       mimeType: 'video/webm',
     });
-    mediaRecorderRef.current.addEventListener(
-      'dataavailable',
-      handleDataAvailable
-    );
-    SpeechRecognition.startListening({ continuous: true })
+    mediaRecorderRef.current.addEventListener('dataavailable', handleDataAvailable);
+    SpeechRecognition.startListening({ continuous: true });
     mediaRecorderRef.current.start();
   };
 
@@ -45,7 +45,9 @@ const Recorder = () => {
   };
 
   const handleStopCaptureClick = () => {
-    mediaRecorderRef.current.stop();
+    if (mediaRecorderRef.current && mediaRecorderRef.current.state !== "inactive") {
+      mediaRecorderRef.current.stop();
+    }
     if (recordedChunks.length) {
       const blob = new Blob(recordedChunks, {
         type: 'video/webm',
@@ -70,7 +72,7 @@ const Recorder = () => {
   };
 
   if (!browserSupportsSpeechRecognition) {
-    return <span style={{fontSize:"20px"}}>Browser doesn't support speech recognition.</span>;
+    return <span style={{ fontSize: "20px" }}>Browser doesn't support speech recognition.</span>;
   }
 
   return (
@@ -80,30 +82,22 @@ const Recorder = () => {
           <h3>Preview:</h3>
           <video src={videoUrl} controls />
         </div>
-      ):
-      (
+      ) : (
         <Webcam audio={true} ref={webcamRef} />
-      )
-      }
+      )}
       {capturing ? (
         <button onClick={handleStopCaptureClick}>Stop</button>
       ) : (
         recordedChunks.length > 0 || videoUrl ? (
           <button onClick={handleStartCaptureClick}>Try Again</button>
-        ):(
+        ) : (
           <button onClick={handleStartCaptureClick}>Start</button>
         )
       )}
       {recordedChunks.length > 0 && (
         <button onClick={handleSave}>Watch Preview</button>
       )}
-      {
-        listening ? (
-          <p>Listening...</p>
-        ):(
-          <p>{transcript}</p>
-        )
-      }
+      <p>{finalTranscript}</p>
     </div>
   );
 };
