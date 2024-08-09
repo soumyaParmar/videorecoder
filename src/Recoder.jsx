@@ -77,11 +77,11 @@ const Recorder = () => {
     return <span style={{ fontSize: "20px" }}>Browser doesn't support speech recognition.</span>;
   }
 
-  if(isAndroid){
-    return (
-      <SpeechRecognitionTest/>
-    )
-  }
+  // if(isAndroid){
+  //   return (
+  //     <SpeechRecognitionTest/>
+  //   )
+  // }
 
   return (
     <div className='webCam'>
