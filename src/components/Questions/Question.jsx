@@ -11,10 +11,12 @@ const Question = () => {
   const [done, setDone] = useState(false);
   const [allChat, setAllChat] = useState([]);
   const [text,setText] = useState(false);
-  const [speech, setSpeech] = useState("");
+//   const [speech, setSpeech] = useState("");
   const [next,setNext] = useState(false);
   const [speechDone,setSpeechDone] = useState(false);
   const [unsupported,setUnsupported] = useState(false);
+  const [disable,setDisable] = useState(false);
+
   const questions = [
     "Tell me about your self?",
     "Why is the roll of Frontend/Backend developer?",
@@ -35,12 +37,13 @@ const Question = () => {
   }, [done]);
 
   useEffect(()=>{
-    setSpeech(questions[response])
+    // setSpeech(questions[response])
     if ('speechSynthesis' in window) {
         if(text){
             const utterance = new SpeechSynthesisUtterance(questions[response]);
             speechSynthesis.speak(utterance);
             utterance.onend = () =>{
+                setDisable(false)
                 setSpeechDone(true);
                 setText(false);
                 setAllChat((prev) => [
@@ -97,6 +100,8 @@ if(unsupported){
               speechDone={speechDone}
               setSpeechDone={setSpeechDone}
               setUnsupported={setUnsupported}
+              setDisable={setDisable}
+              disable={disable}
             />
           </div>
         ) : (

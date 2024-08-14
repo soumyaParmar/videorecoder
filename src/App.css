@@ -28,7 +28,7 @@ video{
     width: 500px;
     border-radius: 10px;
 }
-button{
+.button{
     background-color: grey;
     padding: 12px 25px;
     margin: 10px 0;
