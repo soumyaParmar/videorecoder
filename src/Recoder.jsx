@@ -50,12 +50,14 @@ const Recorder = (props) => {
     setFinalTranscript("");
     setDone(false)
     setNext(false);
-    mediaRecorderRef.current = new MediaRecorder(webcamRef.current.stream, {
-      mimeType: 'video/webm',
-    });
-    mediaRecorderRef.current.addEventListener('dataavailable', handleDataAvailable);
-    SpeechRecognition.startListening({ continuous: true });
-    mediaRecorderRef.current.start();
+    if(webcamRef.current && webcamRef.current.stream){
+      mediaRecorderRef.current = new MediaRecorder(webcamRef.current.stream, {
+        mimeType: 'video/webm',
+      });
+      mediaRecorderRef.current.addEventListener('dataavailable', handleDataAvailable);
+      SpeechRecognition.startListening({ continuous: true });
+      mediaRecorderRef.current.start();
+    }
   };
 
   const handleDataAvailable = ({ data }) => {
@@ -93,6 +95,7 @@ const Recorder = (props) => {
       setVideoUrl(url);
       setRecordedChunks([]);
       setNext(false);
+      setSpeechDone(false);
     }
   };
   const startSpeech = ()=>{
@@ -101,6 +104,7 @@ const Recorder = (props) => {
 
   const handleNext = () =>{
     nextQuestion();
+    setFinalTranscript("");
     startSpeech();
   }
 

@@ -4,7 +4,6 @@ import Recorder from "../../Recoder";
 import { Canvas } from "@react-three/fiber";
 import { Avatar } from "../Avatar";
 import { Environment, OrbitControls } from "@react-three/drei";
-import Speech from 'react-speech';
 
 const Question = () => {
   const [response, setResponse] = useState(0);
@@ -70,8 +69,8 @@ if(unsupported){
 
   return (
     <>
-    <h1 style={{padding:"0 0 0 20px"}}>{questions[response]}</h1>
-    <div style={{ display: "flex",justifyContent:"space-evenly",padding:'30px 30px 0 30px'}}>
+    {/* <h1 style={{padding:"0 0 0 20px"}}>{questions[response]}</h1> */}
+    <div style={{ display: "flex",justifyContent:"space-evenly",padding:'150px 30px 0 30px'}}>
       <div style={{display:"flex",justifyContent:'center',alignItems:'center',flexDirection:'column'}}>
         <Canvas camera={{ position: [0, 2, 10], fov: 50 }} style={{height:'350px'}}>
           <OrbitControls />
