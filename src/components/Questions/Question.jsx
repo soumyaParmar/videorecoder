@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 import { useEffect, useState } from "react";
 import Recorder from "../../Recoder";
 import { Canvas } from "@react-three/fiber";
@@ -14,6 +15,7 @@ const Question = () => {
   const [speech, setSpeech] = useState("");
   const [next,setNext] = useState(false);
   const [speechDone,setSpeechDone] = useState(false);
+  const [unsupported,setUnsupported] = useState(false);
   const questions = [
     "Tell me about your self?",
     "Why is the roll of Frontend/Backend developer?",
@@ -61,6 +63,11 @@ const Question = () => {
       alert("Thank you for your time we will get back to you soon.");
     }
   };
+
+if(unsupported){
+    return <span style={{ fontSize: "20px" }}>Browser doesn't support speech recognition. Please use Chrome or Edge</span>;
+}
+
   return (
     <>
     <h1 style={{padding:"0 0 0 20px"}}>{questions[response]}</h1>
@@ -90,6 +97,7 @@ const Question = () => {
               nextQuestion={nextQuestion}
               speechDone={speechDone}
               setSpeechDone={setSpeechDone}
+              setUnsupported={setUnsupported}
             />
           </div>
         ) : (

@@ -8,7 +8,7 @@ import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognitio
 // import SpeechRecognitionTest from './Android';
 
 const Recorder = (props) => {
-  const { setDoneResponse,setDone,response,setText,next,setNext,nextQuestion,speechDone,setSpeechDone } = props
+  const { setDoneResponse,setDone,response,setText,next,setNext,nextQuestion,speechDone,setSpeechDone,setUnsupported } = props
   const webcamRef = useRef(null);
   const mediaRecorderRef = useRef(null);
   const [capturing, setCapturing] = useState(false);
@@ -105,7 +105,7 @@ const Recorder = (props) => {
   }
 
   if (!browserSupportsSpeechRecognition) {
-    return <span style={{ fontSize: "20px" }}>Browser doesn't support speech recognition. Please use Chrome or Edge</span>;
+    setUnsupported(true);
   }
 
   // if(isAndroid){
