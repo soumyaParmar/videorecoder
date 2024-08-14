@@ -1,33 +1,48 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 .main{
-    height: 100vh;
-    width: 100vw;
+    display: flex;
+    gap: 150px;
+    overflow-y: hidden;
+    overflow-x: hidden;
+}
+.left{
+    width: 20%;
+    height: 600px;
+    border: 1px solid #ccc;
+}
+.right{
+    width: 100%;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    padding-top: 20px;
-}
-
-.right{
-    width: 80%;
 }
 .webCam{
     display: flex;
     flex-direction: column;
-    align-items: center;
     justify-content: center;
+    align-items: center;
 }
 video{
-    height: 400px;
-    width: auto;
+    width: 500px;
     border-radius: 10px;
 }
 button{
-    background-color: #0284c7;
-    width: 300px;
-    padding: 10px 30px;
+    background-color: grey;
+    padding: 12px 25px;
     margin: 10px 0;
     border: none;
-    border-radius: 10px;
     cursor: pointer;
     color: white;
+    border-radius: 10px;
+}
+.videoMenu{
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    border: 1px solid white;
+    height: 100px;
+    left: 25%;
+    width: 50%;
 }

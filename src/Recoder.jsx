@@ -1,12 +1,14 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable react/no-unescaped-entities */
 import { useEffect, useRef, useState } from 'react';
 import Webcam from 'react-webcam';
 import './App.css';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
-import isAndroid from './isAndroid';
-import SpeechRecognitionTest from './Android';
+// import isAndroid from './isAndroid';
+// import SpeechRecognitionTest from './Android';
 
-const Recorder = () => {
+const Recorder = (props) => {
+  const { setDoneResponse,setDone,response,setText,next,setNext,nextQuestion,speechDone,setSpeechDone } = props
   const webcamRef = useRef(null);
   const mediaRecorderRef = useRef(null);
   const [capturing, setCapturing] = useState(false);
@@ -19,19 +21,35 @@ const Recorder = () => {
     if (webcamRef.current && webcamRef.current.video) {
       webcamRef.current.video.muted = true;
     }
-  }, [webcamRef]);
+  }, [webcamRef,next]);
 
   useEffect(() => {
     if (listening) {
-      setFinalTranscript(transcript); // Update the final transcript immediately as the user speaks
+      setFinalTranscript(transcript);
+      setDoneResponse(transcript)
     }
   }, [transcript, listening]);
+
+  useEffect(()=>{
+    setCapturing(false);
+    setRecordedChunks([]);
+    setVideoUrl(null);
+    setFinalTranscript("");
+  },[response])
+
+  useEffect(()=>{
+    if(speechDone){
+      handleStartCaptureClick();
+    }
+  },[speechDone])
 
   const handleStartCaptureClick = () => {
     setCapturing(true);
     setVideoUrl(null);
     resetTranscript();
-    setFinalTranscript(""); // Reset the final transcript
+    setFinalTranscript("");
+    setDone(false)
+    setNext(false);
     mediaRecorderRef.current = new MediaRecorder(webcamRef.current.stream, {
       mimeType: 'video/webm',
     });
@@ -60,6 +78,10 @@ const Recorder = () => {
     }
     SpeechRecognition.stopListening();
     setCapturing(false);
+    setDone(true);
+    setText(false);
+    setNext(false);
+    setSpeechDone(false);
   };
 
   const handleSave = () => {
@@ -70,11 +92,20 @@ const Recorder = () => {
       const url = URL.createObjectURL(blob);
       setVideoUrl(url);
       setRecordedChunks([]);
+      setNext(false);
     }
   };
+  const startSpeech = ()=>{
+    setText(true);
+  }
+
+  const handleNext = () =>{
+    nextQuestion();
+    startSpeech();
+  }
 
   if (!browserSupportsSpeechRecognition) {
-    return <span style={{ fontSize: "20px" }}>Browser doesn't support speech recognition.</span>;
+    return <span style={{ fontSize: "20px" }}>Browser doesn't support speech recognition. Please use Chrome or Edge</span>;
   }
 
   // if(isAndroid){
@@ -93,19 +124,23 @@ const Recorder = () => {
       ) : (
         <Webcam audio={true} ref={webcamRef} />
       )}
+      <div style={{display:'flex', gap:'10px',paddingTop:'50px'}}>
       {capturing ? (
-        <button onClick={handleStopCaptureClick}>Stop</button>
+        <button onClick={handleStopCaptureClick} style={{bottom:0,left:'50%'}}>Stop</button>
       ) : (
         recordedChunks.length > 0 || videoUrl ? (
-          <button onClick={handleStartCaptureClick}>Try Again</button>
+          <button onClick={startSpeech}>Try Again</button>
         ) : (
-          <button onClick={handleStartCaptureClick}>Start</button>
+          <button onClick={startSpeech} style={{bottom:0}}>Start</button>
         )
       )}
       {recordedChunks.length > 0 && (
         <button onClick={handleSave}>Watch Preview</button>
       )}
-      <p>{finalTranscript ? finalTranscript : "error"}</p>
+      {!capturing && 
+      <button onClick={handleNext}>Next</button>
+    }
+      </div>
     </div>
   );
 };
