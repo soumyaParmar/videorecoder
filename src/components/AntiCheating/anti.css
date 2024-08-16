@@ -1,0 +1,23 @@
+.per_body{
+    padding: 50px;
+}
+.button{
+    background-color: aliceblue !important;
+    color: black !important;
+    padding: 10px 20px;
+    margin: 10px 0;
+    font-size: 20px;
+}
+p{
+    padding: 10px 0;
+    font-size: 20px;
+}
+.start_btn{
+    position: absolute;
+    bottom: 50px;
+    right: 50px;
+    font-size: 20px;
+    background-color: aliceblue;
+    color: black;
+    padding: 10px 20px;
+}

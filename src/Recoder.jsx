@@ -6,6 +6,11 @@ import "./App.css";
 import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
+import PlayCircleFilledWhiteIcon from '@mui/icons-material/PlayCircleFilledWhite';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import PreviewIcon from '@mui/icons-material/Preview';
+import StopCircleIcon from '@mui/icons-material/StopCircle';
+import ReplayIcon from '@mui/icons-material/Replay';
 // import isAndroid from './isAndroid';
 // import SpeechRecognitionTest from './Android';
 
@@ -16,13 +21,13 @@ const Recorder = (props) => {
     response,
     setText,
     next,
-    setNext,
     nextQuestion,
     speechDone,
     setSpeechDone,
     setUnsupported,
     disable,
     setDisable,
+    setNext
   } = props;
   const webcamRef = useRef(null);
   const mediaRecorderRef = useRef(null);
@@ -61,7 +66,35 @@ const Recorder = (props) => {
     if (speechDone) {
       handleStartCaptureClick();
     }
-  }, [speechDone]);
+  }, [speechDone,webcamRef]);
+
+  const handleDataAvailable = ({ data }) => {
+    if (data.size > 0) {
+      setRecordedChunks((prev) => prev.concat(data));
+    }
+  };
+
+  const handleStopCaptureClick = () => {
+    if (mediaRecorderRef.current && mediaRecorderRef.current.state !== "inactive") {
+      mediaRecorderRef.current.stop();
+    }
+    if (recordedChunks.length) {
+      const blob = new Blob(recordedChunks, { type: "video/webm" });
+      const url = URL.createObjectURL(blob); 
+
+      setVideoUrl(url); 
+
+      setRecordedChunks([]);
+    }
+    SpeechRecognition.stopListening();
+    setCapturing(false);
+    setDone(true);
+    setText(false);
+    setSpeechDone(false);
+    if (webcamRef.current && webcamRef.current.video) {
+      webcamRef.current.video.muted = true; // Mute audio on stop
+    }
+  };
 
   const handleStartCaptureClick = () => {
     setCapturing(true);
@@ -84,35 +117,6 @@ const Recorder = (props) => {
     }
   };
 
-  const handleDataAvailable = ({ data }) => {
-    if (data.size > 0) {
-      setRecordedChunks((prev) => prev.concat(data));
-    }
-  };
-
-  const handleStopCaptureClick = () => {
-    if (
-      mediaRecorderRef.current &&
-      mediaRecorderRef.current.state !== "inactive"
-    ) {
-      mediaRecorderRef.current.stop();
-    }
-    if (recordedChunks.length) {
-      const blob = new Blob(recordedChunks, {
-        type: "video/webm",
-      });
-      const url = URL.createObjectURL(blob);
-      setVideoUrl(url);
-      setRecordedChunks([]);
-    }
-    SpeechRecognition.stopListening();
-    setCapturing(false);
-    setDone(true);
-    setText(false);
-    setNext(false);
-    setSpeechDone(false);
-  };
-
   const handleSave = () => {
     if (recordedChunks.length) {
       const blob = new Blob(recordedChunks, {
@@ -121,14 +125,21 @@ const Recorder = (props) => {
       const url = URL.createObjectURL(blob);
       setVideoUrl(url);
       setRecordedChunks([]);
-      setNext(false);
       setSpeechDone(false);
     }
   };
   const startSpeech = () => {
     setDisable(true);
     setText(true);
+    setNext(true)
   };
+
+  const restartSpeech = () =>{
+    setVideoUrl(null);
+    setCapturing(false);
+    setDoneResponse('');
+    setRecordedChunks([]);
+  }
 
   const handleNext = () => {
     nextQuestion();
@@ -162,23 +173,25 @@ const Recorder = (props) => {
           <button
             onClick={handleStopCaptureClick}
             style={{ bottom: 0, left: "50%" }}
-            className="button"
+            className="btn"
           >
-            Stop
+            <StopCircleIcon fontSize='large'/>
+            <p style={{fontSize:'12px'}}>Stop</p>
           </button>
         ) : (!disable && recordedChunks.length > 0) || videoUrl ? (
-          <button onClick={startSpeech} className="button">Try Again</button>
+          <button onClick={restartSpeech} className="btn"><ReplayIcon fontSize='large'/><p style={{fontSize:'12px'}}>Re-Try</p></button> //retry
         ) : (
           !disable && (
-            <button onClick={startSpeech} style={{ bottom: 0 }} className="button">
-              Start
+            <button onClick={startSpeech} style={{ bottom: 0 }} className="btn">
+              <PlayCircleFilledWhiteIcon fontSize='large'/>
+              <p style={{fontSize:'12px'}}>Start</p>
             </button>
           )
         )}
         {recordedChunks.length > 0 && !disable && (
-          <button onClick={handleSave} className="button">Watch Preview</button>
+          <button onClick={handleSave} className="btn"><PreviewIcon fontSize='large'/><p style={{fontSize:'12px'}}>Preview</p></button>
         )}
-        {!capturing && !disable && <button onClick={handleNext} className="button">Next</button>}
+        {!capturing && !disable && <button onClick={handleNext} className="btn"><ArrowForwardIosIcon fontSize='large'/><p style={{fontSize:'12px'}}>Next</p></button>}
       </div>
     </div>
   );

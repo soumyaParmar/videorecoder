@@ -46,6 +46,7 @@ const Question = () => {
                 setDisable(false)
                 setSpeechDone(true);
                 setText(false);
+                setNext(false);
                 setAllChat((prev) => [
                     ...prev,
                     { question: questions[response] },
@@ -74,8 +75,8 @@ if(unsupported){
     <>
     {/* <h1 style={{padding:"0 0 0 20px"}}>{questions[response]}</h1> */}
     <div style={{ display: "flex",justifyContent:"space-evenly",padding:'150px 30px 0 30px'}}>
-      <div style={{display:"flex",justifyContent:'center',alignItems:'center',flexDirection:'column'}}>
-        <Canvas camera={{ position: [0, 2, 10], fov: 50 }} style={{height:'350px'}}>
+      <div style={{display:"flex",alignItems:'center',flexDirection:'column'}}>
+        <Canvas camera={{ position: [0, 2, 10], fov: 50 }} style={{height:'375px',backgroundColor:'whitesmoke'}}>
           <OrbitControls />
           <Avatar
             position={[0, -1.5, 9]}
