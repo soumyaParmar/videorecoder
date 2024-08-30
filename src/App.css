@@ -26,6 +26,7 @@
 }
 video{
     width: 500px;
+    transform: scaleX(-1);
 }
 .btn{
   background-color: transparent;
