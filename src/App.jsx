@@ -10,6 +10,7 @@ function App() {
         <Routes>
           <Route path='/' element={<Verify/>}/>
           <Route path='/test_screen' element={<Quespage/>}/>
+          {/* <Route path='/face' element={<Facedetection/>}/> */}
         </Routes>
       </BrowserRouter>
     </>

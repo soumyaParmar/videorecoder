@@ -1,20 +1,23 @@
 import { useEffect, useRef, useState } from "react";
-import './anti.css'
+import './anti.css';
 import { useNavigate } from "react-router-dom";
+import Webcam from "react-webcam";
+import useFacedetection from "../Facedetection/Facedetection";
+import Facedetection from "../Facedetection/Facedetection";
 
 const Anticheat = () => {
   const [isExtendedScreen, setIsExtendedScreen] = useState(false);
   const [cameraPermission, setCameraPermission] = useState(false);
-  const [allTestPassed, setAllTestPassed] = useState(false);
   const [isFullScreen, setIsFullScreen] = useState(false);
   const router = useNavigate();
   const webcam = useRef(null);
+
   useEffect(() => {
     if (window.screen.isExtended) {
       setIsExtendedScreen(true);
     }
     getCameraPermission();
-  });
+  }, []);
 
   const getCameraPermission = async () => {
     try {
@@ -36,8 +39,8 @@ const Anticheat = () => {
   const handleFullscreen = () => {
     if (!isFullScreen) {
       document.documentElement.requestFullscreen();
+      setIsFullScreen(true);
     }
-    setIsFullScreen(true);
   };
 
   const handleExitFullscreen = () => {
@@ -45,9 +48,9 @@ const Anticheat = () => {
     setIsFullScreen(false);
   };
 
-  const handleTestStart = () =>{
-    router('/test_screen')
-  }
+  const handleTestStart = () => {
+    router('/test_screen');
+  };
 
   return (
     <div className="per_body">
@@ -57,13 +60,13 @@ const Anticheat = () => {
         </button>
       ) : (
         <button className="button" onClick={handleExitFullscreen}>
-          Do not all full screen <span>This will end the test</span>
+          Exit full screen
         </button>
       )}
       {isExtendedScreen ? (
         <p>Second screen found</p>
       ) : (
-        <p>Do not have second screen</p>
+        <p>No second screen detected</p>
       )}
       {cameraPermission ? (
         <p>Camera and microphone access granted</p>
@@ -71,14 +74,9 @@ const Anticheat = () => {
         <p>Camera and microphone access not granted</p>
       )}
       {cameraPermission && (
-        <video
-          autoPlay
-          playsInline
-          muted
-          ref={webcam}
-          id="webcam"
-          style={{ position: "absolute", right: "50px", top: "50px", width: "500px" }}
-        />
+        <div style={{position:"absolute" , right:'50px', top:'50px'}}>
+          <Facedetection/>
+        </div>
       )}
       <button className="start_btn" onClick={handleTestStart}>Start Test</button>
     </div>

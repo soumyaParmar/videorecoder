@@ -6,7 +6,6 @@ function Verify() {
     <>
     <div className="main">
       <div className="right">
-        {/* <Question/> */}
         <Anticheat/>
       </div>
     </div>

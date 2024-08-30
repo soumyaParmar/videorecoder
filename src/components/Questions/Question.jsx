@@ -4,6 +4,7 @@ import Recorder from "../../Recoder";
 import { Canvas } from "@react-three/fiber";
 import { Avatar } from "../Avatar";
 import { Environment, OrbitControls } from "@react-three/drei";
+import './ques.css'
 
 const Question = () => {
   const [response, setResponse] = useState(0);
@@ -74,7 +75,8 @@ if(unsupported){
   return (
     <>
     {/* <h1 style={{padding:"0 0 0 20px"}}>{questions[response]}</h1> */}
-    <div style={{ display: "flex",justifyContent:"space-evenly",padding:'150px 30px 0 30px'}}>
+    <div style={{ display: "flex",justifyContent:"space-evenly",padding:'0px 30px 0 30px'}}>
+      <div className="leftSide">
       <div style={{display:"flex",alignItems:'center',flexDirection:'column'}}>
         <Canvas camera={{ position: [0, 2, 10], fov: 50 }} style={{height:'375px',backgroundColor:'whitesmoke'}}>
           <OrbitControls />
@@ -108,10 +110,8 @@ if(unsupported){
         ) : (
           <h1>Thank you...</h1>
         )}
-        {/* <button onClick={nextQuestion} style={{bottom:0,right:"40%"}}>
-          next
-        </button> */}
         <p>{doneResponse}</p>
+      </div>
       </div>
       <div
         style={{

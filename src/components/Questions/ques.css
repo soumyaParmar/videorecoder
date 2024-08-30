@@ -1,0 +1,7 @@
+.leftSide{
+    display: flex;
+    width: 70%;
+    justify-content: center;
+    gap: 20px;
+    padding-top: 150px;
+}
