@@ -94,6 +94,8 @@ const Recorder = (props) => {
     if (webcamRef.current && webcamRef.current.video) {
       webcamRef.current.video.muted = true; // Mute audio on stop
     }
+
+    props.handleStartStop();
   };
 
   const handleStartCaptureClick = () => {
@@ -132,6 +134,7 @@ const Recorder = (props) => {
     setDisable(true);
     setText(true);
     setNext(true)
+    props.handleStartStop();
   };
 
   const restartSpeech = () =>{
@@ -139,6 +142,8 @@ const Recorder = (props) => {
     setCapturing(false);
     setDoneResponse('');
     setRecordedChunks([]);
+    props.handleStartStop();
+
   }
 
   const handleNext = () => {
