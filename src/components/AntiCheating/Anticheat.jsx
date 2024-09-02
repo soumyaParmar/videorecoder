@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Webcam from "react-webcam";
 import useFacedetection from "../Facedetection/Facedetection";
 import Facedetection from "../Facedetection/Facedetection";
+import MultipleFaceDetectionComponent from "../temp/Face";
 
 const Anticheat = () => {
   const [isExtendedScreen, setIsExtendedScreen] = useState(false);
@@ -75,7 +76,7 @@ const Anticheat = () => {
       )}
       {cameraPermission && (
         <div style={{position:"absolute" , right:'50px', top:'50px'}}>
-          <Facedetection/>
+          <MultipleFaceDetectionComponent/>
         </div>
       )}
       <button className="start_btn" onClick={handleTestStart}>Start Test</button>

@@ -1,5 +1,5 @@
-import React, { useRef, useEffect, useState } from 'react';
-import * as faceapi from 'face-api.js';
+import { useRef, useEffect, useState } from "react";
+import * as faceapi from "face-api.js";
 
 const Facedetection = () => {
   const videoRef = useRef(null);
@@ -8,22 +8,24 @@ const Facedetection = () => {
   useEffect(() => {
     const loadModels = async () => {
       // Load the models from the /models directory
-      await faceapi.nets.tinyFaceDetector.loadFromUri('/models');
-      await faceapi.nets.faceLandmark68Net.loadFromUri('/models');
-      await faceapi.nets.faceRecognitionNet.loadFromUri('/models');
-      await faceapi.nets.faceExpressionNet.loadFromUri('/models');
+      await faceapi.nets.tinyFaceDetector.loadFromUri("/models");
+      await faceapi.nets.faceLandmark68Net.loadFromUri("/models");
+      await faceapi.nets.faceRecognitionNet.loadFromUri("/models");
+      await faceapi.nets.faceExpressionNet.loadFromUri("/models");
 
       // Start video stream
       startVideo();
     };
 
     const startVideo = () => {
-      navigator.mediaDevices
+      if(videoRef.current){
+        navigator.mediaDevices
         .getUserMedia({ video: {} })
         .then((stream) => {
           videoRef.current.srcObject = stream;
         })
         .catch((err) => console.error(err));
+      }
     };
 
     loadModels();
@@ -33,7 +35,7 @@ const Facedetection = () => {
       const stream = videoRef.current?.srcObject;
       if (stream) {
         const tracks = stream.getTracks();
-        tracks.forEach(track => track.stop());
+        tracks.forEach((track) => track.stop());
       }
     };
   }, []);
@@ -43,7 +45,8 @@ const Facedetection = () => {
 
     setInterval(async () => {
       // Detect all faces in the video stream
-      const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions())
+      const detections = await faceapi
+        .detectAllFaces(video, new faceapi.TinyFaceDetectorOptions())
         .withFaceLandmarks()
         .withFaceExpressions();
 
@@ -61,10 +64,18 @@ const Facedetection = () => {
   };
 
   return (
-    <div>
-      <video ref={videoRef} autoPlay muted onPlay={handleVideoOnPlay} style={{ display: 'block', width: '100%' }} />
-      <div>Number of people detected: {numPeople}</div>
-    </div>
+    <>
+        <div>
+          <video
+            ref={videoRef}
+            autoPlay
+            muted
+            onPlay={handleVideoOnPlay}
+            style={{ display: "block", width: "100%" }}
+          />
+          <div>Number of people detected: {numPeople}</div>
+        </div>
+    </>
   );
 };
 
