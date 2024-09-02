@@ -75,7 +75,7 @@ if(unsupported){
   return (
     <>
     {/* <h1 style={{padding:"0 0 0 20px"}}>{questions[response]}</h1> */}
-    <div style={{ display: "flex",justifyContent:"space-evenly",padding:'0px 30px 0 30px'}}>
+    <div style={{ display: "flex",justifyContent:"space-evenly",padding:'0px 30px 0 30px',height:'100vh'}}>
       <div className="leftSide">
       <div style={{display:"flex",alignItems:'center',flexDirection:'column'}}>
         <Canvas camera={{ position: [0, 2, 10], fov: 50 }} style={{height:'375px',backgroundColor:'whitesmoke'}}>
@@ -118,8 +118,9 @@ if(unsupported){
           border: "1px solid white",
           borderRadius: "5px",
           width: "350px ",
-          height:'450px ',
+          height:'85% ',
           overflowY: "scroll",
+          marginTop:'50px'
         }}
       >
         {allChat &&
