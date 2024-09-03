@@ -43,9 +43,10 @@ const Question = () => {
   const microphoneRef = React.useRef(null);
   const scriptProcessorRef = React.useRef(null);
 
-  const LOW_PITCH_THRESHOLD = 17600; // Example threshold
+  const LOW_PITCH_THRESHOLD = 17500; 
   const detector = PitchFinder.YIN();
 
+  // Question
   const questions = [
     "Tell me about your self?",
     "Why is the roll of Frontend/Backend developer?",
@@ -146,6 +147,7 @@ const Question = () => {
       startListening();
     }
   };
+
   useEffect(() => {
     if (done) {
       setAllChat((prev) => [...prev, { response: doneResponse }]);
@@ -236,7 +238,7 @@ const Question = () => {
                   setUnsupported={setUnsupported}
                   setDisable={setDisable}
                   disable={disable}
-                  handleStartStop = {handleStartStop}
+                  handleStartStop={handleStartStop}
                 />
               </div>
             ) : (
@@ -247,7 +249,12 @@ const Question = () => {
         </div>
 
         <div>
-          <PitchDetector handleStartStop={handleStartStop} isListening = {isListening} warning = {warning} data = {data}/>
+          <PitchDetector
+            handleStartStop={handleStartStop}
+            isListening={isListening}
+            warning={warning}
+            data={data}
+          />
         </div>
         <div
           style={{
@@ -293,6 +300,13 @@ const Question = () => {
               </div>
             ))}
         </div>
+      </div>
+      <div style={{ textAlign: "center" }}>
+        {warning && (
+          <div style={{ marginTop: "10px", color: "red", fontSize: "18px" }}>
+            {warning}
+          </div>
+        )}
       </div>
     </>
   );

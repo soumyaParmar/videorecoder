@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import './anti.css';
 import { useNavigate } from "react-router-dom";
-import Webcam from "react-webcam";
-import useFacedetection from "../Facedetection/Facedetection";
-import Facedetection from "../Facedetection/Facedetection";
+// import Webcam from "react-webcam";
+// import useFacedetection from "../Facedetection/Facedetection";
+// import Facedetection from "../Facedetection/Facedetection";
 import MultipleFaceDetectionComponent from "../temp/Face";
 
 const Anticheat = () => {

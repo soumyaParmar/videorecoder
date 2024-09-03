@@ -142,7 +142,7 @@ const Recorder = (props) => {
     setCapturing(false);
     setDoneResponse('');
     setRecordedChunks([]);
-    props.handleStartStop();
+    // props.handleStartStop();
 
   }
 
