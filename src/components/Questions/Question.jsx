@@ -195,7 +195,7 @@ const Question = () => {
           padding: "0px 30px 0 30px",
           height: "100vh",
         }}
-        className="border"
+        className=""
       >
         {/* start of left side */}
         <div className="leftSide h-[35rem] mt-[5rem] w-[60rem]">
