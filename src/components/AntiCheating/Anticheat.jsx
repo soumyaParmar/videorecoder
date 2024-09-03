@@ -16,7 +16,7 @@ const Anticheat = () => {
     if (window.screen.isExtended) {
       setIsExtendedScreen(true);
     }
-    if(isExtendedScreen && cameraPermission && isFullScreen){
+    if(!isExtendedScreen && cameraPermission && isFullScreen){
       setAllPermission(true)
     }else{
       setAllPermission(false)
