@@ -9,7 +9,7 @@ import PitchDetector from "../PitchDetection/PitchDetection";
 import PitchFinder from "pitchfinder";
 import "./ques.css";
 
-const LOW_PITCH_THRESHOLD = 17500;
+const LOW_PITCH_THRESHOLD = 17000;
 
 const Question = () => {
   const [response, setResponse] = useState(0);
