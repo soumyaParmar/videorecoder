@@ -193,162 +193,123 @@ const Question = () => {
         }}
       >
         <div className="leftSide">
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              flexDirection: "column",
-            }}
-          >
-            <Canvas
-              camera={{ position: [0, 2, 10], fov: 50 }}
-              style={{ height: "375px", backgroundColor: "whitesmoke" }}
+          <div className="top">
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                flexDirection: "column",
+              }}
             >
-              <OrbitControls />
-              <Avatar
-                position={[0, -1.5, 9]}
-                scale={2}
-                text={text ? questions[response] : ""}
-              />
-              <Environment preset="sunset" />
-            </Canvas>
-            <span style={{ padding: "50px 0 0 0" }}>Interviewer</span>
-          </div>
-          <div style={{ width: "600px" }}>
-            {response < questions.length ? (
-              <Recorder
-                setDoneResponse={setDoneResponse}
-                setDone={setDone}
-                response={response}
-                setText={setText}
-                next={next}
-                setNext={setNext}
-                nextQuestion={nextQuestion}
-                speechDone={speechDone}
-                setSpeechDone={setSpeechDone}
-                setUnsupported={setUnsupported}
-                setDisable={setDisable}
-                disable={disable}
-                handleStartStop={handleStartStop}
-              />
-            ) : (
-              <h1>Thank you...</h1>
-            )}
-            <p>{doneResponse}</p>
-          </div>
-        </div>
-        <PitchDetector
-          handleStartStop={handleStartStop}
-          isListening={isListening}
-          warning={warning}
-          data={data}
-        />
-        <div className="top">
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              flexDirection: "column",
-            }}
-          >
-            <Canvas
-              camera={{ position: [0, 2, 10], fov: 50 }}
-              style={{ height: "375px", backgroundColor: "whitesmoke" }}
-            >
-              <OrbitControls />
-              <Avatar
-                position={[0, -1.5, 9]}
-                scale={2}
-                text={text ? questions[response] : ""}
-              />
-              <Environment preset="sunset" />
-            </Canvas>
-            <span style={{ padding: "50px 0 0 0" }}>Interviewer</span>
-          </div>
-          <div style={{ width: "600px" }}>
-            {response !== questions.length ? (
-              <div>
-                <Recorder
-                  setDoneResponse={setDoneResponse}
-                  setDone={setDone}
-                  response={response}
-                  setText={setText}
-                  next={next}
-                  setNext={setNext}
-                  nextQuestion={nextQuestion}
-                  speechDone={speechDone}
-                  setSpeechDone={setSpeechDone}
-                  setUnsupported={setUnsupported}
-                  setDisable={setDisable}
-                  disable={disable}
+              <Canvas
+                camera={{ position: [0, 2, 10], fov: 50 }}
+                style={{ height: "375px", backgroundColor: "whitesmoke" }}
+              >
+                <OrbitControls />
+                <Avatar
+                  position={[0, -1.5, 9]}
+                  scale={2}
+                  text={text ? questions[response] : ""}
                 />
+                <Environment preset="sunset" />
+              </Canvas>
+              <span style={{ padding: "50px 0 0 0" }}>Interviewer</span>
+            </div>
+            <div style={{ width: "600px" }}>
+              {response !== questions.length ? (
+                <div>
+                  <Recorder
+                    setDoneResponse={setDoneResponse}
+                    setDone={setDone}
+                    response={response}
+                    setText={setText}
+                    next={next}
+                    setNext={setNext}
+                    nextQuestion={nextQuestion}
+                    speechDone={speechDone}
+                    setSpeechDone={setSpeechDone}
+                    setUnsupported={setUnsupported}
+                    setDisable={setDisable}
+                    disable={disable}
+                    handleStartStop={handleStartStop}
+                  />
+                </div>
+              ) : (
+                <h1>Thank you...</h1>
+              )}
+              <p>{doneResponse}</p>
+            </div>
+          </div>
+          <div
+            style={{
+              width: "400px",
+              height: "200px",
+            }}
+          >
+            <PitchDetector
+              handleStartStop={handleStartStop}
+              isListening={isListening}
+              warning={warning}
+              data={data}
+            />
+          </div>
+
+          <div style={{ textAlign: "center" }}>
+            {warning && (
+              <div
+                style={{ marginTop: "10px", color: "red", fontSize: "18px" }}
+              >
+                {warning}
               </div>
-            ) : (
-              <h1>Thank you...</h1>
             )}
-            <p>{doneResponse}</p>
           </div>
         </div>
+
         <div
           style={{
-            width: "400px",
-            height: "200px",
             border: "1px solid white",
+            borderRadius: "5px",
+            width: "350px ",
+            height: "85% ",
+            overflowY: "scroll",
+            marginTop: "50px",
           }}
-        ></div>
-      </div>
-      <div
-        style={{
-          border: "1px solid white",
-          borderRadius: "5px",
-          width: "350px ",
-          height: "85% ",
-          overflowY: "scroll",
-          marginTop: "50px",
-        }}
-      >
-        {allChat &&
-          allChat.map((item, index) => (
-            <div key={index} style={{ padding: "10px 10px 0 10px" }}>
-              <div>
-                {item.question && (
-                  <span
-                    style={{
-                      backgroundColor: "white",
-                      color: "black",
-                      borderRadius: "10px",
-                      padding: "5px 10px",
-                    }}
-                  >
-                    {item.question}
-                  </span>
-                )}
+        >
+          {allChat &&
+            allChat.map((item, index) => (
+              <div key={index} style={{ padding: "10px 10px 0 10px" }}>
+                <div>
+                  {item.question && (
+                    <span
+                      style={{
+                        backgroundColor: "white",
+                        color: "black",
+                        borderRadius: "10px",
+                        padding: "5px 10px",
+                      }}
+                    >
+                      {item.question}
+                    </span>
+                  )}
+                </div>
+                <div style={{ display: "flex", justifyContent: "end" }}>
+                  {item.response && (
+                    <span
+                      style={{
+                        textAlign: "right",
+                        backgroundColor: "white",
+                        color: "black",
+                        borderRadius: "10px",
+                        padding: "5px 10px",
+                      }}
+                    >
+                      {item.response}
+                    </span>
+                  )}
+                </div>
               </div>
-              <div style={{ display: "flex", justifyContent: "end" }}>
-                {item.response && (
-                  <span
-                    style={{
-                      textAlign: "right",
-                      backgroundColor: "white",
-                      color: "black",
-                      borderRadius: "10px",
-                      padding: "5px 10px",
-                    }}
-                  >
-                    {item.response}
-                  </span>
-                )}
-              </div>
-            </div>
-          ))}
-      </div>
-
-      <div style={{ textAlign: "center" }}>
-        {warning && (
-          <div style={{ marginTop: "10px", color: "red", fontSize: "18px" }}>
-            {warning}
-          </div>
-        )}
+            ))}
+        </div>
       </div>
     </>
   );

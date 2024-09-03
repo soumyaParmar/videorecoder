@@ -16,14 +16,15 @@ ChartJS.register(BarElement, CategoryScale, LinearScale, Title);
 
 const PitchDetector = (props) => {
   return (
-    <div style={{ textAlign: "center", marginTop: "240px", marginRight:"120px"}}>
+    <div >
       <div
         style={{
-          marginTop: "180px",
+          // marginTop: "180px",
           width: "20px",
           height: "200px",
-          margin: "auto",
+          // margin: "auto",
         }}
+      
       >
         <Bar
           data={props.data}
