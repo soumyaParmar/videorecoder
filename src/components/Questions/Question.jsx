@@ -1,13 +1,15 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/no-unescaped-entities */
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Recorder from "../../Recoder";
 import { Canvas } from "@react-three/fiber";
 import { Avatar } from "../Avatar";
 import { Environment, OrbitControls } from "@react-three/drei";
-import "./ques.css";
 import PitchDetector from "../PitchDetection/PitchDetection";
 import PitchFinder from "pitchfinder";
+import "./ques.css";
+
+const LOW_PITCH_THRESHOLD = 17500;
 
 const Question = () => {
   const [response, setResponse] = useState(0);
@@ -15,13 +17,12 @@ const Question = () => {
   const [done, setDone] = useState(false);
   const [allChat, setAllChat] = useState([]);
   const [text, setText] = useState(false);
-  //   const [speech, setSpeech] = useState("");
   const [next, setNext] = useState(false);
   const [speechDone, setSpeechDone] = useState(false);
   const [unsupported, setUnsupported] = useState(false);
   const [disable, setDisable] = useState(false);
 
-  // for pitch detection
+  // Pitch detection state
   const [pitch, setPitch] = useState(null);
   const [isListening, setIsListening] = useState(false);
   const [warning, setWarning] = useState("");
@@ -38,26 +39,23 @@ const Question = () => {
     ],
   });
 
-  const audioContextRef = React.useRef(null);
-  const analyserRef = React.useRef(null);
-  const microphoneRef = React.useRef(null);
-  const scriptProcessorRef = React.useRef(null);
+  const audioContextRef = useRef(null);
+  const analyserRef = useRef(null);
+  const microphoneRef = useRef(null);
+  const scriptProcessorRef = useRef(null);
 
-  const LOW_PITCH_THRESHOLD = 17500; 
-  const detector = PitchFinder.YIN();
-
-  // Question
   const questions = [
-    "Tell me about your self?",
-    "Why is the roll of Frontend/Backend developer?",
-    "How do you ensure the security of sensitive data in a web application",
-    "Describe the process of making a responsive web application. What tools or frameworks do you prefer",
+    "Tell me about yourself?",
+    "Why is the role of Frontend/Backend developer important?",
+    "How do you ensure the security of sensitive data in a web application?",
+    "Describe the process of making a responsive web application. What tools or frameworks do you prefer?",
     "How do you design a RESTful API? What are the best practices you follow?",
-    "How do you handle cross-browser compatibility issues? Can you share an example from your experience",
+    "How do you handle cross-browser compatibility issues? Can you share an example from your experience?",
     "What are the key differences between CSS Grid and Flexbox, and when would you use one over the other?",
   ];
 
-  // for pitch detection
+  const detector = PitchFinder.YIN();
+
   const detectPitch = (event) => {
     const buffer = event.inputBuffer.getChannelData(0);
     const pitch = detector(buffer);
@@ -65,11 +63,11 @@ const Question = () => {
       const roundedPitch = Math.round(pitch);
       setPitch(roundedPitch);
       updateGraph(roundedPitch);
-      if (roundedPitch < LOW_PITCH_THRESHOLD) {
-        setWarning("Please speak in a higher pitch.");
-      } else {
-        setWarning("");
-      }
+      setWarning(
+        roundedPitch < LOW_PITCH_THRESHOLD
+          ? "Please speak in a higher pitch."
+          : ""
+      );
     } else {
       setPitch(null);
       setWarning("");
@@ -103,7 +101,6 @@ const Question = () => {
 
       scriptProcessor.onaudioprocess = detectPitch;
 
-      // Store references to be used later for cleanup
       audioContextRef.current = audioContext;
       analyserRef.current = analyser;
       microphoneRef.current = microphone;
@@ -141,11 +138,7 @@ const Question = () => {
   };
 
   const handleStartStop = () => {
-    if (isListening) {
-      stopListening();
-    } else {
-      startListening();
-    }
+    isListening ? stopListening() : startListening();
   };
 
   useEffect(() => {
@@ -155,49 +148,46 @@ const Question = () => {
   }, [done]);
 
   useEffect(() => {
-    // setSpeech(questions[response])
-    if ("speechSynthesis" in window) {
-      if (text) {
-        const utterance = new SpeechSynthesisUtterance(questions[response]);
-        speechSynthesis.speak(utterance);
-        utterance.onend = () => {
-          setDisable(false);
-          setSpeechDone(true);
-          setText(false);
-          setNext(false);
-          setAllChat((prev) => [...prev, { question: questions[response] }]);
-        };
-      }
-    } else {
+    if ("speechSynthesis" in window && text) {
+      const utterance = new SpeechSynthesisUtterance(questions[response]);
+      speechSynthesis.speak(utterance);
+      utterance.onend = () => {
+        setDisable(false);
+        setSpeechDone(true);
+        setText(false);
+        setNext(false);
+        setAllChat((prev) => [...prev, { question: questions[response] }]);
+      };
+    } else if (!("speechSynthesis" in window)) {
       alert("Sorry, your browser does not support text-to-speech.");
     }
   }, [text]);
 
   const nextQuestion = () => {
-    if (response !== questions.length - 1) {
+    if (response < questions.length - 1) {
       setResponse(response + 1);
       setNext(true);
     } else {
-      alert("Thank you for your time we will get back to you soon.");
+      alert("Thank you for your time. We will get back to you soon.");
     }
   };
 
   if (unsupported) {
     return (
       <span style={{ fontSize: "20px" }}>
-        Browser doesn't support speech recognition. Please use Chrome or Edge
+        Browser doesn't support speech recognition. Please use Chrome or Edge.
       </span>
     );
   }
 
   return (
     <>
-      {/* <h1 style={{padding:"0 0 0 20px"}}>{questions[response]}</h1> */}
       <div
         style={{
           display: "flex",
           justifyContent: "space-evenly",
-          padding: "0px 30px 0 30px",
+          padding: "0px 30px",
+          height: "100vh",
         }}
       >
         <div className="leftSide">
@@ -223,54 +213,58 @@ const Question = () => {
             <span style={{ padding: "50px 0 0 0" }}>Interviewer</span>
           </div>
           <div style={{ width: "600px" }}>
-            {response !== questions.length ? (
-              <div>
-                <Recorder
-                  setDoneResponse={setDoneResponse}
-                  setDone={setDone}
-                  response={response}
-                  setText={setText}
-                  next={next}
-                  setNext={setNext}
-                  nextQuestion={nextQuestion}
-                  speechDone={speechDone}
-                  setSpeechDone={setSpeechDone}
-                  setUnsupported={setUnsupported}
-                  setDisable={setDisable}
-                  disable={disable}
-                  handleStartStop={handleStartStop}
-                />
-              </div>
+            {response < questions.length ? (
+              <Recorder
+                setDoneResponse={setDoneResponse}
+                setDone={setDone}
+                response={response}
+                setText={setText}
+                next={next}
+                setNext={setNext}
+                nextQuestion={nextQuestion}
+                speechDone={speechDone}
+                setSpeechDone={setSpeechDone}
+                setUnsupported={setUnsupported}
+                setDisable={setDisable}
+                disable={disable}
+                handleStartStop={handleStartStop}
+              />
             ) : (
               <h1>Thank you...</h1>
             )}
             <p>{doneResponse}</p>
           </div>
         </div>
-
-        <div>
-          <PitchDetector
+        <PitchDetector
             handleStartStop={handleStartStop}
             isListening={isListening}
             warning={warning}
             data={data}
           />
-        </div>
         <div
           style={{
             border: "1px solid white",
             borderRadius: "5px",
             width: "350px ",
-            height: "450px ",
+            height: "85%",
             overflowY: "scroll",
+            marginTop: "50px",
           }}
-        >
-          {allChat &&
-            allChat.map((item, index) => (
-              <div key={index} style={{ padding: "10px 10px 0 10px" }}>
-                <div>
+          >
+          
+          <div style={{ padding: "10px" }}>
+            <div
+              style={{
+                border: "1px solid white",
+                borderRadius: "5px",
+                height: "450px",
+                overflowY: "scroll",
+              }}
+            >
+              {allChat.map((item, index) => (
+                <div key={index} style={{ padding: "10px 10px 0 10px" }}>
                   {item.question && (
-                    <span
+                    <div
                       style={{
                         backgroundColor: "white",
                         color: "black",
@@ -279,14 +273,13 @@ const Question = () => {
                       }}
                     >
                       {item.question}
-                    </span>
+                    </div>
                   )}
-                </div>
-                <div style={{ display: "flex", justifyContent: "end" }}>
                   {item.response && (
-                    <span
+                    <div
                       style={{
-                        textAlign: "right",
+                        display: "flex",
+                        justifyContent: "end",
                         backgroundColor: "white",
                         color: "black",
                         borderRadius: "10px",
@@ -294,20 +287,26 @@ const Question = () => {
                       }}
                     >
                       {item.response}
-                    </span>
+                    </div>
                   )}
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
+          </div>
         </div>
       </div>
-      <div style={{ textAlign: "center" }}>
-        {warning && (
-          <div style={{ marginTop: "10px", color: "red", fontSize: "18px" }}>
-            {warning}
-          </div>
-        )}
-      </div>
+      {warning && (
+        <div
+          style={{
+            textAlign: "center",
+            marginTop: "10px",
+            color: "red",
+            fontSize: "18px",
+          }}
+        >
+          {warning}
+        </div>
+      )}
     </>
   );
 };
