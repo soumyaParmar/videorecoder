@@ -1,15 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import './anti.css';
 import { useNavigate } from "react-router-dom";
-import Webcam from "react-webcam";
-import useFacedetection from "../Facedetection/Facedetection";
-import Facedetection from "../Facedetection/Facedetection";
 import MultipleFaceDetectionComponent from "../temp/Face";
+// import Facedetection from "../Facedetection/Facedetection";
 
 const Anticheat = () => {
   const [isExtendedScreen, setIsExtendedScreen] = useState(false);
   const [cameraPermission, setCameraPermission] = useState(false);
   const [isFullScreen, setIsFullScreen] = useState(false);
+  const [allPermission,setAllPermission] = useState(false)
   const router = useNavigate();
   const webcam = useRef(null);
 
@@ -17,8 +16,15 @@ const Anticheat = () => {
     if (window.screen.isExtended) {
       setIsExtendedScreen(true);
     }
+    if(isExtendedScreen && cameraPermission && isFullScreen){
+      setAllPermission(true)
+    }else{
+      setAllPermission(false)
+    }
     getCameraPermission();
-  }, []);
+  }, [isExtendedScreen,cameraPermission,isFullScreen]);
+
+  
 
   const getCameraPermission = async () => {
     try {
@@ -31,6 +37,8 @@ const Anticheat = () => {
         if (webcam.current) {
           webcam.current.srcObject = videoStream;
         }
+      }else{
+        setCameraPermission(false);
       }
     } catch (error) {
       setCameraPermission(false);
@@ -79,7 +87,17 @@ const Anticheat = () => {
           <MultipleFaceDetectionComponent/>
         </div>
       )}
-      <button className="start_btn" onClick={handleTestStart}>Start Test</button>
+      {
+        allPermission ? (
+          <>
+            <button className="start_btn" onClick={handleTestStart}>Start Test</button>
+          </>
+        ):(
+          <>
+            <button className="req_btn">All permission required</button>
+          </>
+        )
+      }
     </div>
   );
 };

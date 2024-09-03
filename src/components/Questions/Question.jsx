@@ -4,19 +4,19 @@ import Recorder from "../../Recoder";
 import { Canvas } from "@react-three/fiber";
 import { Avatar } from "../Avatar";
 import { Environment, OrbitControls } from "@react-three/drei";
-import './ques.css'
+import "./ques.css";
 
 const Question = () => {
   const [response, setResponse] = useState(0);
   const [doneResponse, setDoneResponse] = useState([]);
   const [done, setDone] = useState(false);
   const [allChat, setAllChat] = useState([]);
-  const [text,setText] = useState(false);
-//   const [speech, setSpeech] = useState("");
-  const [next,setNext] = useState(false);
-  const [speechDone,setSpeechDone] = useState(false);
-  const [unsupported,setUnsupported] = useState(false);
-  const [disable,setDisable] = useState(false);
+  const [text, setText] = useState(false);
+  //   const [speech, setSpeech] = useState("");
+  const [next, setNext] = useState(false);
+  const [speechDone, setSpeechDone] = useState(false);
+  const [unsupported, setUnsupported] = useState(false);
+  const [disable, setDisable] = useState(false);
 
   const questions = [
     "Tell me about your self?",
@@ -30,136 +30,158 @@ const Question = () => {
 
   useEffect(() => {
     if (done) {
-      setAllChat((prev) => [
-        ...prev,
-        { response: doneResponse },
-      ]);
+      setAllChat((prev) => [...prev, { response: doneResponse }]);
     }
   }, [done]);
 
-  useEffect(()=>{
+  useEffect(() => {
     // setSpeech(questions[response])
-    if ('speechSynthesis' in window) {
-        if(text){
-            const utterance = new SpeechSynthesisUtterance(questions[response]);
-            speechSynthesis.speak(utterance);
-            utterance.onend = () =>{
-                setDisable(false)
-                setSpeechDone(true);
-                setText(false);
-                setNext(false);
-                setAllChat((prev) => [
-                    ...prev,
-                    { question: questions[response] },
-                  ]);
-            }
-        }
-      } else {
-        alert('Sorry, your browser does not support text-to-speech.');
+    if ("speechSynthesis" in window) {
+      if (text) {
+        const utterance = new SpeechSynthesisUtterance(questions[response]);
+        speechSynthesis.speak(utterance);
+        utterance.onend = () => {
+          setDisable(false);
+          setSpeechDone(true);
+          setText(false);
+          setNext(false);
+          setAllChat((prev) => [...prev, { question: questions[response] }]);
+        };
       }
-  },[text])
+    } else {
+      alert("Sorry, your browser does not support text-to-speech.");
+    }
+  }, [text]);
 
   const nextQuestion = () => {
     if (response !== questions.length - 1) {
       setResponse(response + 1);
-      setNext(true)
+      setNext(true);
     } else {
       alert("Thank you for your time we will get back to you soon.");
     }
   };
 
-if(unsupported){
-    return <span style={{ fontSize: "20px" }}>Browser doesn't support speech recognition. Please use Chrome or Edge</span>;
-}
+  if (unsupported) {
+    return (
+      <span style={{ fontSize: "20px" }}>
+        Browser doesn't support speech recognition. Please use Chrome or Edge
+      </span>
+    );
+  }
 
   return (
     <>
-    {/* <h1 style={{padding:"0 0 0 20px"}}>{questions[response]}</h1> */}
-    <div style={{ display: "flex",justifyContent:"space-evenly",padding:'0px 30px 0 30px',height:'100vh'}}>
-      <div className="leftSide">
-      <div style={{display:"flex",alignItems:'center',flexDirection:'column'}}>
-        <Canvas camera={{ position: [0, 2, 10], fov: 50 }} style={{height:'375px',backgroundColor:'whitesmoke'}}>
-          <OrbitControls />
-          <Avatar
-            position={[0, -1.5, 9]}
-            scale={2}
-            text={text ? questions[response] : ""}
-          />
-          <Environment preset="sunset" />
-        </Canvas>
-        <span style={{padding:'50px 0 0 0'}}>Interviewer</span>
-      </div>
-      <div style={{width:'600px'}}>
-        {response !== questions.length ? (
-          <div>
-            <Recorder
-              setDoneResponse={setDoneResponse}
-              setDone={setDone}
-              response={response}
-              setText={setText}
-              next={next}
-              setNext={setNext}
-              nextQuestion={nextQuestion}
-              speechDone={speechDone}
-              setSpeechDone={setSpeechDone}
-              setUnsupported={setUnsupported}
-              setDisable={setDisable}
-              disable={disable}
-            />
-          </div>
-        ) : (
-          <h1>Thank you...</h1>
-        )}
-        <p>{doneResponse}</p>
-      </div>
-      </div>
+      {/* <h1 style={{padding:"0 0 0 20px"}}>{questions[response]}</h1> */}
       <div
         style={{
-          border: "1px solid white",
-          borderRadius: "5px",
-          width: "350px ",
-          height:'85% ',
-          overflowY: "scroll",
-          marginTop:'50px'
+          display: "flex",
+          justifyContent: "space-evenly",
+          padding: "0px 30px 0 30px",
+          height: "100vh",
         }}
       >
-        {allChat &&
-          allChat.map((item, index) => (
-            <div key={index} style={{ padding: "10px 10px 0 10px" }}>
-                <div>
-                {item.question &&
-              <span
-                style={{
-                  backgroundColor: "white",
-                  color: "black",
-                  borderRadius: "10px",
-                  padding: "5px 10px",
-                }}
+        <div className="leftSide">
+          <div className="top">
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                flexDirection: "column",
+              }}
+            >
+              <Canvas
+                camera={{ position: [0, 2, 10], fov: 50 }}
+                style={{ height: "375px", backgroundColor: "whitesmoke" }}
               >
-                {item.question}
-              </span>
-                }
-                </div>
-                <div style={{display:"flex",justifyContent:'end'}}>
-                {item.response && 
-              <span
-                style={{
-                  textAlign: "right",
-                  backgroundColor: "white",
-                  color: "black",
-                  borderRadius: "10px",
-                  padding: "5px 10px",
-                }}
-              >
-                {item.response}
-              </span>
-                }
-                </div>
+                <OrbitControls />
+                <Avatar
+                  position={[0, -1.5, 9]}
+                  scale={2}
+                  text={text ? questions[response] : ""}
+                />
+                <Environment preset="sunset" />
+              </Canvas>
+              <span style={{ padding: "50px 0 0 0" }}>Interviewer</span>
             </div>
-          ))}
-          
+            <div style={{ width: "600px" }}>
+              {response !== questions.length ? (
+                <div>
+                  <Recorder
+                    setDoneResponse={setDoneResponse}
+                    setDone={setDone}
+                    response={response}
+                    setText={setText}
+                    next={next}
+                    setNext={setNext}
+                    nextQuestion={nextQuestion}
+                    speechDone={speechDone}
+                    setSpeechDone={setSpeechDone}
+                    setUnsupported={setUnsupported}
+                    setDisable={setDisable}
+                    disable={disable}
+                  />
+                </div>
+              ) : (
+                <h1>Thank you...</h1>
+              )}
+              <p>{doneResponse}</p>
+            </div>
+          </div>
+          <div
+            style={{
+              width: "400px",
+              height: "200px",
+              border: "1px solid white",
+            }}
+          ></div>
+        </div>
+        <div
+          style={{
+            border: "1px solid white",
+            borderRadius: "5px",
+            width: "350px ",
+            height: "85% ",
+            overflowY: "scroll",
+            marginTop: "50px",
+          }}
+        >
+          {allChat &&
+            allChat.map((item, index) => (
+              <div key={index} style={{ padding: "10px 10px 0 10px" }}>
+                <div>
+                  {item.question && (
+                    <span
+                      style={{
+                        backgroundColor: "white",
+                        color: "black",
+                        borderRadius: "10px",
+                        padding: "5px 10px",
+                      }}
+                    >
+                      {item.question}
+                    </span>
+                  )}
+                </div>
+                <div style={{ display: "flex", justifyContent: "end" }}>
+                  {item.response && (
+                    <span
+                      style={{
+                        textAlign: "right",
+                        backgroundColor: "white",
+                        color: "black",
+                        borderRadius: "10px",
+                        padding: "5px 10px",
+                      }}
+                    >
+                      {item.response}
+                    </span>
+                  )}
+                </div>
+              </div>
+            ))}
+        </div>
       </div>
-    </div>
     </>
   );
 };
