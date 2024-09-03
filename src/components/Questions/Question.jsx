@@ -295,6 +295,7 @@ const Question = () => {
           </div>
         </div>
       </div>
+      {/* warning when user speaks very slow */}
       {warning && (
         <div
           style={{
