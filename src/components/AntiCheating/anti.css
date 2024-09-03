@@ -21,3 +21,13 @@ p{
     color: black;
     padding: 10px 20px;
 }
+
+.req_btn{
+    position: absolute;
+    bottom: 50px;
+    right: 50px;
+    font-size: 20px;
+    background-color: rgb(148, 148, 148);
+    color: rgb(48, 46, 46);
+    padding: 10px 20px;
+}

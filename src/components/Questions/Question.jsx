@@ -17,6 +17,7 @@ const Question = () => {
   const [done, setDone] = useState(false);
   const [allChat, setAllChat] = useState([]);
   const [text, setText] = useState(false);
+  //   const [speech, setSpeech] = useState("");
   const [next, setNext] = useState(false);
   const [speechDone, setSpeechDone] = useState(false);
   const [unsupported, setUnsupported] = useState(false);
@@ -182,11 +183,12 @@ const Question = () => {
 
   return (
     <>
+      {/* <h1 style={{padding:"0 0 0 20px"}}>{questions[response]}</h1> */}
       <div
         style={{
           display: "flex",
           justifyContent: "space-evenly",
-          padding: "0px 30px",
+          padding: "0px 30px 0 30px",
           height: "100vh",
         }}
       >
@@ -236,78 +238,118 @@ const Question = () => {
           </div>
         </div>
         <PitchDetector
-            handleStartStop={handleStartStop}
-            isListening={isListening}
-            warning={warning}
-            data={data}
-          />
-        <div
-          style={{
-            border: "1px solid white",
-            borderRadius: "5px",
-            width: "350px ",
-            height: "85%",
-            overflowY: "scroll",
-            marginTop: "50px",
-          }}
+          handleStartStop={handleStartStop}
+          isListening={isListening}
+          warning={warning}
+          data={data}
+        />
+        <div className="top">
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              flexDirection: "column",
+            }}
           >
-          
-          <div style={{ padding: "10px" }}>
-            <div
-              style={{
-                border: "1px solid white",
-                borderRadius: "5px",
-                height: "450px",
-                overflowY: "scroll",
-              }}
+            <Canvas
+              camera={{ position: [0, 2, 10], fov: 50 }}
+              style={{ height: "375px", backgroundColor: "whitesmoke" }}
             >
-              {allChat.map((item, index) => (
-                <div key={index} style={{ padding: "10px 10px 0 10px" }}>
-                  {item.question && (
-                    <div
-                      style={{
-                        backgroundColor: "white",
-                        color: "black",
-                        borderRadius: "10px",
-                        padding: "5px 10px",
-                      }}
-                    >
-                      {item.question}
-                    </div>
-                  )}
-                  {item.response && (
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "end",
-                        backgroundColor: "white",
-                        color: "black",
-                        borderRadius: "10px",
-                        padding: "5px 10px",
-                      }}
-                    >
-                      {item.response}
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
+              <OrbitControls />
+              <Avatar
+                position={[0, -1.5, 9]}
+                scale={2}
+                text={text ? questions[response] : ""}
+              />
+              <Environment preset="sunset" />
+            </Canvas>
+            <span style={{ padding: "50px 0 0 0" }}>Interviewer</span>
+          </div>
+          <div style={{ width: "600px" }}>
+            {response !== questions.length ? (
+              <div>
+                <Recorder
+                  setDoneResponse={setDoneResponse}
+                  setDone={setDone}
+                  response={response}
+                  setText={setText}
+                  next={next}
+                  setNext={setNext}
+                  nextQuestion={nextQuestion}
+                  speechDone={speechDone}
+                  setSpeechDone={setSpeechDone}
+                  setUnsupported={setUnsupported}
+                  setDisable={setDisable}
+                  disable={disable}
+                />
+              </div>
+            ) : (
+              <h1>Thank you...</h1>
+            )}
+            <p>{doneResponse}</p>
           </div>
         </div>
-      </div>
-      {/* warning when user speaks very slow */}
-      {warning && (
         <div
           style={{
-            textAlign: "center",
-            marginTop: "10px",
-            color: "red",
-            fontSize: "18px",
+            width: "400px",
+            height: "200px",
+            border: "1px solid white",
           }}
-        >
-          {warning}
-        </div>
-      )}
+        ></div>
+      </div>
+      <div
+        style={{
+          border: "1px solid white",
+          borderRadius: "5px",
+          width: "350px ",
+          height: "85% ",
+          overflowY: "scroll",
+          marginTop: "50px",
+        }}
+      >
+        {allChat &&
+          allChat.map((item, index) => (
+            <div key={index} style={{ padding: "10px 10px 0 10px" }}>
+              <div>
+                {item.question && (
+                  <span
+                    style={{
+                      backgroundColor: "white",
+                      color: "black",
+                      borderRadius: "10px",
+                      padding: "5px 10px",
+                    }}
+                  >
+                    {item.question}
+                  </span>
+                )}
+              </div>
+              <div style={{ display: "flex", justifyContent: "end" }}>
+                {item.response && (
+                  <span
+                    style={{
+                      textAlign: "right",
+                      backgroundColor: "white",
+                      color: "black",
+                      borderRadius: "10px",
+                      padding: "5px 10px",
+                    }}
+                  >
+                    {item.response}
+                  </span>
+                )}
+              </div>
+            </div>
+          ))}
+      </div>
+
+      <div style={{ textAlign: "center" }}>
+        {warning && (
+          <div style={{ marginTop: "10px", color: "red", fontSize: "18px" }}>
+            {warning}
+          </div>
+        )}
+      </div>
     </>
   );
 };

@@ -1,6 +1,6 @@
 import{ useEffect, useRef, useState } from 'react';
-import { Camera } from '@mediapipe/camera_utils';
-import { FaceDetection } from '@mediapipe/face_detection';
+// import { Camera } from '@mediapipe/camera_utils';
+// import { FaceDetection } from '@mediapipe/face_detection';
 // import * as drawingUtils from '@mediapipe/drawing_utils';
 
 const MultipleFaceDetectionComponent = () => {
@@ -13,7 +13,7 @@ const MultipleFaceDetectionComponent = () => {
     // const canvasElement = canvasRef.current;
     // const canvasCtx = canvasElement.getContext('2d');
 
-    const faceDetection = new FaceDetection({
+    const faceDetection = new window.FaceDetection({
       locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/face_detection/${file}`,
     });
 
@@ -46,7 +46,7 @@ const MultipleFaceDetectionComponent = () => {
     //   canvasCtx.restore();
     });
 
-    const camera = new Camera(videoElement, {
+    const camera = new window.Camera(videoElement, {
       onFrame: async () => {
         await faceDetection.send({ image: videoElement });
       },

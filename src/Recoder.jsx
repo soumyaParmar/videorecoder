@@ -29,8 +29,9 @@ const Recorder = (props) => {
     setDisable,
     setNext
   } = props;
+
   const webcamRef = useRef(null);
-  const mediaRecorderRef = useRef(null);
+  const mediaRecorderRef = useRef(null)
   const [capturing, setCapturing] = useState(false);
   const [recordedChunks, setRecordedChunks] = useState([]);
   const [videoUrl, setVideoUrl] = useState(null);
