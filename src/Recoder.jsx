@@ -165,7 +165,7 @@ const Recorder = (props) => {
   // }
 
   return (
-    <div className="webCam">
+    <div className="webCam w-[35rem]">
       {videoUrl ? (
         <div>
           <h3>Preview:</h3>

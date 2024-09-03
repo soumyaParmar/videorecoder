@@ -9,7 +9,7 @@ import PitchDetector from "../PitchDetection/PitchDetection";
 import PitchFinder from "pitchfinder";
 import "./ques.css";
 
-const LOW_PITCH_THRESHOLD = 200;
+const LOW_PITCH_THRESHOLD = 17600;
 
 const Question = () => {
   const [response, setResponse] = useState(0);
@@ -187,6 +187,7 @@ const Question = () => {
   return (
     <>
       {/* <h1 style={{padding:"0 0 0 20px"}}>{questions[response]}</h1> */}
+
       <div
         style={{
           display: "flex",
@@ -194,9 +195,23 @@ const Question = () => {
           padding: "0px 30px 0 30px",
           height: "100vh",
         }}
+        className="border"
       >
-        <div className="leftSide">
-          <div className="top">
+        {/* start of left side */}
+        <div className="leftSide h-[35rem] mt-[5rem] w-[60rem]">
+          <div
+            style={{ textAlign: "center" }}
+            className="h-8 w-[30rem] mx-auto mb-6"
+          >
+            {warning && (
+              <div
+                style={{ marginTop: "10px", color: "red", fontSize: "18px" }}
+              >
+                {warning}
+              </div>
+            )}
+          </div>
+          <div className="flex ">
             <div
               style={{
                 display: "flex",
@@ -206,7 +221,11 @@ const Question = () => {
             >
               <Canvas
                 camera={{ position: [0, 2, 10], fov: 50 }}
-                style={{ height: "375px", backgroundColor: "whitesmoke" }}
+                style={{
+                  height: "375px",
+                  backgroundColor: "whitesmoke",
+                  width: "400px",
+                }}
               >
                 <OrbitControls />
                 <Avatar
@@ -216,7 +235,7 @@ const Question = () => {
                 />
                 <Environment preset="sunset" />
               </Canvas>
-              <span style={{ padding: "50px 0 0 0" }}>Interviewer</span>
+              <span style={{ padding: "20px 0 0 0" }}>Interviewer</span>
             </div>
             <div style={{ width: "600px" }}>
               {response !== questions.length ? (
@@ -243,7 +262,7 @@ const Question = () => {
               <p>{doneResponse}</p>
             </div>
           </div>
-          <div
+          {/* <div
             style={{
               width: "400px",
               height: "200px",
@@ -255,32 +274,24 @@ const Question = () => {
               warning={warning}
               data={data}
             />
-          </div>
+          </div> */}
 
-          <div style={{ textAlign: "center" }}>
-            {warning && (
-              <div
-                style={{ marginTop: "10px", color: "red", fontSize: "18px" }}
-              >
-                {warning}
-              </div>
-            )}
-          </div>
         </div>
+        {/* end of left side */}
 
         <div
           style={{
             border: "1px solid white",
             borderRadius: "5px",
-            width: "350px ",
-            height: "85% ",
+            width: "450px ",
             overflowY: "scroll",
-            marginTop: "50px",
+            marginTop:"0.5rem",
+            marginBottom:"0.5rem",
           }}
         >
           {allChat &&
             allChat.map((item, index) => (
-              <div key={index} style={{ padding: "10px 10px 0 10px" }}>
+              <div key={index} style={{ padding: "20px 0px 0 10px" }}>
                 <div>
                   {item.question && (
                     <span
@@ -288,7 +299,9 @@ const Question = () => {
                         backgroundColor: "white",
                         color: "black",
                         borderRadius: "10px",
-                        padding: "5px 10px",
+                        padding: "10px 20px",
+                        lineHeight:"3rem",
+                        height:"auto"
                       }}
                     >
                       {item.question}
