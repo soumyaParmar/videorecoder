@@ -9,7 +9,7 @@ import PitchDetector from "../PitchDetection/PitchDetection";
 import PitchFinder from "pitchfinder";
 import "./ques.css";
 
-const LOW_PITCH_THRESHOLD = 17000;
+const LOW_PITCH_THRESHOLD = 200;
 
 const Question = () => {
   const [response, setResponse] = useState(0);
@@ -60,10 +60,13 @@ const Question = () => {
   const detectPitch = (event) => {
     const buffer = event.inputBuffer.getChannelData(0);
     const pitch = detector(buffer);
+    // console.log(pitch)
+
     if (pitch) {
       const roundedPitch = Math.round(pitch);
       setPitch(roundedPitch);
       updateGraph(roundedPitch);
+      // console.log(roundedPitch)
       setWarning(
         roundedPitch < LOW_PITCH_THRESHOLD
           ? "Please speak in a higher pitch."

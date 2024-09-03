@@ -1,33 +1,52 @@
-.per_body{
-    padding: 50px;
+.per_body {
+  padding: 50px;
 }
-.button{
-    background-color: aliceblue !important;
-    color: black !important;
-    padding: 10px 20px;
-    margin: 10px 0;
-    font-size: 20px;
-}
-p{
-    padding: 10px 0;
-    font-size: 20px;
-}
-.start_btn{
-    position: absolute;
-    bottom: 50px;
-    right: 50px;
-    font-size: 20px;
-    background-color: aliceblue;
-    color: black;
-    padding: 10px 20px;
+.button {
+  background-color: aliceblue;
+  color: black !important;
+  padding: 10px 20px;
+  margin: 10px 0;
+  font-size: 20px;
+  transition: all 0.2s ease;
+
 }
 
-.req_btn{
-    position: absolute;
+.button:hover {
+  background-color: rgb(232, 235, 236);
+}
+p {
+  padding: 10px 0;
+  font-size: 20px;
+}
+.start_btn {
+  /* position: absolute;
     bottom: 50px;
-    right: 50px;
-    font-size: 20px;
-    background-color: rgb(148, 148, 148);
-    color: rgb(48, 46, 46);
-    padding: 10px 20px;
+    right: 50px; */
+  width: 12rem;
+  font-size: 20px;
+  background-color: aliceblue;
+  transition: all 0.2s ease;
+  color: black;
+  padding: 10px 20px;
+}
+
+.start_btn:hover {
+  background-color: rgb(208, 211, 212);
+}
+
+.req_btn {
+  /* position: absolute;
+    bottom: 50px;
+    right: 50px; */
+  font-size: 20px;
+  width: 15rem;
+  transition: all 0.2s ease;
+
+  background-color: rgb(148, 148, 148);
+  color: rgb(48, 46, 46);
+  padding: 10px 10px;
+}
+
+.req_btn:hover {
+  background-color: rgb(179, 177, 177);
 }

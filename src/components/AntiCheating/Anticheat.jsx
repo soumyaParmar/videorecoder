@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import './anti.css';
+import "./anti.css";
 import { useNavigate } from "react-router-dom";
 import MultipleFaceDetectionComponent from "../temp/Face";
 // import Facedetection from "../Facedetection/Facedetection";
@@ -8,7 +8,7 @@ const Anticheat = () => {
   const [isExtendedScreen, setIsExtendedScreen] = useState(false);
   const [cameraPermission, setCameraPermission] = useState(false);
   const [isFullScreen, setIsFullScreen] = useState(false);
-  const [allPermission,setAllPermission] = useState(false)
+  const [allPermission, setAllPermission] = useState(false);
   const router = useNavigate();
   const webcam = useRef(null);
 
@@ -16,15 +16,13 @@ const Anticheat = () => {
     if (window.screen.isExtended) {
       setIsExtendedScreen(true);
     }
-    if(!isExtendedScreen && cameraPermission && isFullScreen){
-      setAllPermission(true)
-    }else{
-      setAllPermission(false)
+    if (!isExtendedScreen && cameraPermission && isFullScreen) {
+      setAllPermission(true);
+    } else {
+      setAllPermission(false);
     }
     getCameraPermission();
-  }, [isExtendedScreen,cameraPermission,isFullScreen]);
-
-  
+  }, [isExtendedScreen, cameraPermission, isFullScreen]);
 
   const getCameraPermission = async () => {
     try {
@@ -37,7 +35,7 @@ const Anticheat = () => {
         if (webcam.current) {
           webcam.current.srcObject = videoStream;
         }
-      }else{
+      } else {
         setCameraPermission(false);
       }
     } catch (error) {
@@ -58,46 +56,52 @@ const Anticheat = () => {
   };
 
   const handleTestStart = () => {
-    router('/test_screen');
+    router("/test_screen");
   };
 
   return (
-    <div className="per_body">
-      {!isFullScreen ? (
-        <button className="button" onClick={handleFullscreen}>
-          Allow full screen
-        </button>
-      ) : (
-        <button className="button" onClick={handleExitFullscreen}>
-          Exit full screen
-        </button>
-      )}
-      {isExtendedScreen ? (
-        <p>Second screen found</p>
-      ) : (
-        <p>No second screen detected</p>
-      )}
-      {cameraPermission ? (
-        <p>Camera and microphone access granted</p>
-      ) : (
-        <p>Camera and microphone access not granted</p>
-      )}
-      {cameraPermission && (
-        <div style={{position:"absolute" , right:'50px', top:'50px'}}>
-          <MultipleFaceDetectionComponent/>
+    <div className="per_body h-[30rem] mx-auto w-[70rem] mt-[7rem] flex justify-between">
+      <div className=" flex flex-col justify-between">
+        <div>
+          {!isFullScreen ? (
+            <button className="button" onClick={handleFullscreen}>
+              Allow full screen
+            </button>
+          ) : (
+            <button className="button" onClick={handleExitFullscreen}>
+              Exit full screen
+            </button>
+          )}
+          {isExtendedScreen ? (
+            <p>Second screen found</p>
+          ) : (
+            <p>No second screen detected</p>
+          )}
+          {cameraPermission ? (
+            <p>Camera and microphone access granted</p>
+          ) : (
+            <p>Camera and microphone access not granted</p>
+          )}
         </div>
-      )}
-      {
-        allPermission ? (
+
+        {allPermission ? (
           <>
-            <button className="start_btn" onClick={handleTestStart}>Start Test</button>
+            <button className="start_btn" onClick={handleTestStart}>
+              Start Test
+            </button>
           </>
-        ):(
+        ) : (
           <>
             <button className="req_btn">All permission required</button>
           </>
-        )
-      }
+        )}
+      </div>
+
+      {cameraPermission && (
+        <div>
+          <MultipleFaceDetectionComponent />
+        </div>
+      )}
     </div>
   );
 };
