@@ -23,7 +23,7 @@ const Question = () => {
   const [disable, setDisable] = useState(false);
 
   // Pitch detection state
-  const [validPitchValue, setvalidPitchValue] = useState(0);
+  const [validPitchValue, setvalidPitchValue] = useState(null);
   const [isListening, setIsListening] = useState(false);
   const [warning, setWarning] = useState("");
   
