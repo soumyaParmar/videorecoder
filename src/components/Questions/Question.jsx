@@ -24,7 +24,7 @@ const Question = () => {
   const [isFullScreen, setIsFullScreen] = useState(false);
 
   // Pitch detection state
-  const [validPitchValue, setvalidPitchValue] = useState(null);
+  // const [validPitchValue, setvalidPitchValue] = useState(null);
   const [isListening, setIsListening] = useState(false);
   const [warning, setWarning] = useState("");
 
@@ -50,22 +50,21 @@ const Question = () => {
     const pitchValue = detector(buffer);
 
     // Check if the pitch is within a reasonable range
-    // let validPitchValue = 0;
+    let validPitchValue = 0;
     if (pitchValue && pitchValue >= 50 && pitchValue <= 4000) {
-      setvalidPitchValue(pitchValue);
+      validPitchValue = pitchValue;
     } else {
-      setvalidPitchValue(null);
+      validPitchValue = null;
     }
 
     if (validPitchValue === null) {
-      console.log(`Silence or unrealistic pitch detected.${validPitchValue}`);
+      console.log("Silence or unrealistic pitch detected.");
     } else {
       console.log(`Detected pitch: ${validPitchValue}`);
     }
 
     if (validPitchValue) {
       console.log(validPitchValue);
-      // setvalidPitchValue(pitchValue)
       if (validPitchValue < LOW_PITCH_THRESHOLD) {
         setWarning("Please speak in a higher pitch.");
       } else {
@@ -76,7 +75,6 @@ const Question = () => {
         return () => clearTimeout(timer);
       }
     } else {
-      setvalidPitchValue(null);
       const timer = setTimeout(() => {
         setWarning("");
       }, 3000);
@@ -88,7 +86,9 @@ const Question = () => {
   useEffect(() => {
     const handleFullscreenChange = () => {
       if (!document.fullscreenElement) {
-        alert("Fullscreen is required for this test. Please enter fullscreen mode.");
+        alert(
+          "Fullscreen is required for this test. Please enter fullscreen mode."
+        );
         setIsFullScreen(false);
       } else {
         setIsFullScreen(true);
@@ -99,7 +99,9 @@ const Question = () => {
       if (event.key === "Escape" && document.fullscreenElement) {
         event.preventDefault(); // Prevent default action
         alert("You need to stay in fullscreen mode to continue.");
-        document.documentElement.requestFullscreen().catch((err) => console.error("Error entering fullscreen", err));
+        document.documentElement
+          .requestFullscreen()
+          .catch((err) => console.error("Error entering fullscreen", err));
       }
     };
 
@@ -159,7 +161,7 @@ const Question = () => {
     audioContextRef.current = null;
 
     setIsListening(false);
-    setvalidPitchValue(null);
+    // setvalidPitchValue(null);
     setWarning("");
   };
 
@@ -218,10 +220,10 @@ const Question = () => {
         className=""
       >
         {/* start of left side */}
-        <div className="leftSide h-[39rem] mt-[2rem] w-[65rem] bg-slate-900 p-6 flex justify-center items-center mr-5 pl-[5rem] pt-[5rem]">
+        <div className="leftSide h-[39rem] mt-[2rem] w-[65rem] bg-slate-900 p-6 flex  flex-col justify-center items-center mr-5 pl-[5rem] pt-[5rem]">
           <div
             style={{ textAlign: "center" }}
-            className="h-8 w-[30rem] mx-auto mb-6"
+            className="h-8 w-[30rem] mx-auto mt-[-1rem] mb-5"
           >
             {warning && (
               <div
@@ -287,46 +289,70 @@ const Question = () => {
 
         <div
           style={{
-            border: "1px solid white",
+            // border: "1px solid white",
             borderRadius: "5px",
+            maxHeight: "100vh",
             width: "450px ",
-            overflowY: "scroll",
+            scrollbarWidth: "none",
             marginTop: "0.5rem",
             marginBottom: "0.5rem",
           }}
+          className="rightContainer"
         >
           {allChat &&
             allChat.map((item, index) => (
               <div key={index} style={{ padding: "20px 0px 0 10px" }}>
                 <div>
                   {item.question && (
-                    <span
-                      style={{
-                        backgroundColor: "white",
-                        color: "black",
-                        borderRadius: "10px",
-                        padding: "10px 20px",
-                        lineHeight: "3rem",
-                        height: "auto",
-                      }}
-                    >
-                      {item.question}
-                    </span>
+                    <>
+                      <div className="flex gap-2">
+                        <img
+                          src="/interviewer.webp"
+                          alt="interviewer"
+                          width={40}
+                          className="h-[40px]"
+                        />
+                        <span
+                          style={{
+                            backgroundColor: "white",
+                            color: "black",
+                            borderRadius: "10px",
+                            padding: "10px 10px",
+                            height: "auto",
+                          }}
+                        >
+                          {item.question}
+                        </span>
+                      </div>
+                    </>
                   )}
                 </div>
+
+                {/* response box */}
                 <div style={{ display: "flex", justifyContent: "end" }}>
                   {item.response && (
-                    <span
-                      style={{
-                        textAlign: "right",
-                        backgroundColor: "white",
-                        color: "black",
-                        borderRadius: "10px",
-                        padding: "5px 10px",
-                      }}
-                    >
-                      {item.response}
-                    </span>
+                    <>
+                    <div className="flex gap-2 ">
+                      <span
+                        style={{
+                          textAlign: "right",
+                          backgroundColor: "white",
+                          color: "black",
+                          borderRadius: "10px",
+                          padding: "5px 10px",
+                        }}
+                      >
+                        {item.response}
+
+                      </span>
+                        <img
+                          src="/user.png"
+                          alt="interviewer"
+                          width={40}
+                          className="h-[40px] rounded-full"
+                        />
+                      </div>
+                    </>
                   )}
                 </div>
               </div>

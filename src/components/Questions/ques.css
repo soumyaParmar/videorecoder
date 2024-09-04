@@ -5,3 +5,14 @@
     gap: 20px;
     padding-top: 50px;
 } */
+
+.rightContainer{
+    /* background-color: aqua; */
+    overflow-y: auto;
+
+}
+
+.right-container::-webkit-scrollbar {
+    width: 0px;
+    background: transparent; /* Optional: Set the background to transparent if needed */
+  }
