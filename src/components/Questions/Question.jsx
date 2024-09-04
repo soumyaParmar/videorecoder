@@ -5,7 +5,6 @@ import Recorder from "../../Recoder";
 import { Canvas } from "@react-three/fiber";
 import { Avatar } from "../Avatar";
 import { Environment, OrbitControls } from "@react-three/drei";
-import PitchDetector from "../PitchDetection/PitchDetection";
 import PitchFinder from "pitchfinder";
 import "./ques.css";
 
