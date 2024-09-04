@@ -24,6 +24,23 @@ const Anticheat = () => {
     getCameraPermission();
   }, [isExtendedScreen, cameraPermission, isFullScreen]);
 
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      if (!document.fullscreenElement) {
+        alert("The application requires fullscreen mode to operate");
+        setIsFullScreen(false); // Update fullscreen state
+      } else {
+        setIsFullScreen(true); // Update fullscreen state
+      }
+    };
+
+    document.addEventListener("fullscreenchange", handleFullscreenChange);
+
+    return () => {
+      document.removeEventListener("fullscreenchange", handleFullscreenChange);
+    };
+  }, []);
+
   const getCameraPermission = async () => {
     try {
       const videoStream = await navigator.mediaDevices.getUserMedia({
@@ -44,15 +61,16 @@ const Anticheat = () => {
   };
 
   const handleFullscreen = () => {
-    if (!isFullScreen) {
+    // if (!isFullScreen) {
       document.documentElement.requestFullscreen();
-      setIsFullScreen(true);
-    }
+      // setIsFullScreen(true);
+    // }
   };
 
   const handleExitFullscreen = () => {
     document.exitFullscreen();
-    setIsFullScreen(false);
+    // setIsFullScreen(false);
+    console.log("you exit")
   };
 
   const handleTestStart = () => {
@@ -61,7 +79,7 @@ const Anticheat = () => {
 
   return (
     <div className="per_body h-[30rem] mx-auto w-[70rem] mt-[7rem] flex justify-between">
-      <div className=" flex flex-col justify-between">
+      <div className=" flex flex-col justify-between p-8 bg-slate-900">
         <div>
           {!isFullScreen ? (
             <button className="button" onClick={handleFullscreen}>

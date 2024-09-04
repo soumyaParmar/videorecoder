@@ -169,7 +169,7 @@ const Recorder = (props) => {
       {videoUrl ? (
         <div>
           <h3>Preview:</h3>
-          <video src={videoUrl} controls />
+          <video src={videoUrl} controls width={300}/>
         </div>
       ) : (
         <Webcam audio={true} ref={webcamRef} />

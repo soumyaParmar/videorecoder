@@ -21,12 +21,12 @@ const Question = () => {
   const [speechDone, setSpeechDone] = useState(false);
   const [unsupported, setUnsupported] = useState(false);
   const [disable, setDisable] = useState(false);
+  const [isFullScreen, setIsFullScreen] = useState(false);
 
   // Pitch detection state
   const [validPitchValue, setvalidPitchValue] = useState(null);
   const [isListening, setIsListening] = useState(false);
   const [warning, setWarning] = useState("");
-  
 
   const audioContextRef = useRef(null);
   const analyserRef = useRef(null);
@@ -52,9 +52,9 @@ const Question = () => {
     // Check if the pitch is within a reasonable range
     // let validPitchValue = 0;
     if (pitchValue && pitchValue >= 50 && pitchValue <= 4000) {
-      setvalidPitchValue(pitchValue)
+      setvalidPitchValue(pitchValue);
     } else {
-      setvalidPitchValue(null)
+      setvalidPitchValue(null);
     }
 
     if (validPitchValue === null) {
@@ -75,9 +75,8 @@ const Question = () => {
 
         return () => clearTimeout(timer);
       }
-      
     } else {
-      setvalidPitchValue(null)
+      setvalidPitchValue(null);
       const timer = setTimeout(() => {
         setWarning("");
       }, 3000);
@@ -86,7 +85,32 @@ const Question = () => {
     }
   };
 
- 
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      if (!document.fullscreenElement) {
+        alert("Fullscreen is required for this test. Please enter fullscreen mode.");
+        setIsFullScreen(false);
+      } else {
+        setIsFullScreen(true);
+      }
+    };
+
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape" && document.fullscreenElement) {
+        event.preventDefault(); // Prevent default action
+        alert("You need to stay in fullscreen mode to continue.");
+        document.documentElement.requestFullscreen().catch((err) => console.error("Error entering fullscreen", err));
+      }
+    };
+
+    document.addEventListener("fullscreenchange", handleFullscreenChange);
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("fullscreenchange", handleFullscreenChange);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
 
   const startListening = async () => {
     try {
@@ -184,7 +208,6 @@ const Question = () => {
 
   return (
     <>
-
       <div
         style={{
           display: "flex",
@@ -195,7 +218,7 @@ const Question = () => {
         className=""
       >
         {/* start of left side */}
-        <div className="leftSide h-[35rem] mt-[5rem] w-[60rem]">
+        <div className="leftSide h-[39rem] mt-[2rem] w-[65rem] bg-slate-900 p-6 flex justify-center items-center mr-5 pl-[5rem] pt-[5rem]">
           <div
             style={{ textAlign: "center" }}
             className="h-8 w-[30rem] mx-auto mb-6"
@@ -204,7 +227,6 @@ const Question = () => {
               <div
                 style={{ marginTop: "10px", color: "red", fontSize: "18px" }}
               >
-                
                 {warning}
               </div>
             )}
@@ -260,7 +282,6 @@ const Question = () => {
               <p>{doneResponse}</p>
             </div>
           </div>
-          
         </div>
         {/* end of left side */}
 
