@@ -9,7 +9,7 @@ import PitchDetector from "../PitchDetection/PitchDetection";
 import PitchFinder from "pitchfinder";
 import "./ques.css";
 
-const LOW_PITCH_THRESHOLD = 17600;
+const LOW_PITCH_THRESHOLD = 220;
 
 const Question = () => {
   const [response, setResponse] = useState(0);
@@ -24,21 +24,10 @@ const Question = () => {
   const [disable, setDisable] = useState(false);
 
   // Pitch detection state
-  const [pitch, setPitch] = useState(null);
+  const [validPitchValue, setvalidPitchValue] = useState(0);
   const [isListening, setIsListening] = useState(false);
   const [warning, setWarning] = useState("");
-  const [data, setData] = useState({
-    labels: ["Pitch"],
-    datasets: [
-      {
-        label: "Detected Pitch (Hz)",
-        data: [0],
-        backgroundColor: "rgba(75,192,192,0.6)",
-        borderColor: "rgba(75,192,192,1)",
-        borderWidth: 0,
-      },
-    ],
-  });
+  
 
   const audioContextRef = useRef(null);
   const analyserRef = useRef(null);
@@ -59,36 +48,46 @@ const Question = () => {
 
   const detectPitch = (event) => {
     const buffer = event.inputBuffer.getChannelData(0);
-    const pitch = detector(buffer);
-    // console.log(pitch)
+    const pitchValue = detector(buffer);
 
-    if (pitch) {
-      const roundedPitch = Math.round(pitch);
-      setPitch(roundedPitch);
-      updateGraph(roundedPitch);
-      // console.log(roundedPitch)
-      setWarning(
-        roundedPitch < LOW_PITCH_THRESHOLD
-          ? "Please speak in a higher pitch."
-          : ""
-      );
+    // Check if the pitch is within a reasonable range
+    // let validPitchValue = 0;
+    if (pitchValue && pitchValue >= 50 && pitchValue <= 4000) {
+      setvalidPitchValue(pitchValue)
     } else {
-      setPitch(null);
-      setWarning("");
+      setvalidPitchValue(null)
+    }
+
+    if (validPitchValue === null) {
+      console.log(`Silence or unrealistic pitch detected.${validPitchValue}`);
+    } else {
+      console.log(`Detected pitch: ${validPitchValue}`);
+    }
+
+    if (validPitchValue) {
+      console.log(validPitchValue);
+      // setvalidPitchValue(pitchValue)
+      if (validPitchValue < LOW_PITCH_THRESHOLD) {
+        setWarning("Please speak in a higher pitch.");
+      } else {
+        const timer = setTimeout(() => {
+          setWarning("");
+        }, 3000);
+
+        return () => clearTimeout(timer);
+      }
+      
+    } else {
+      setvalidPitchValue(null)
+      const timer = setTimeout(() => {
+        setWarning("");
+      }, 3000);
+
+      return () => clearTimeout(timer);
     }
   };
 
-  const updateGraph = (pitchValue) => {
-    setData((prevData) => ({
-      ...prevData,
-      datasets: [
-        {
-          ...prevData.datasets[0],
-          data: [pitchValue],
-        },
-      ],
-    }));
-  };
+ 
 
   const startListening = async () => {
     try {
@@ -137,7 +136,7 @@ const Question = () => {
     audioContextRef.current = null;
 
     setIsListening(false);
-    setPitch(null);
+    setvalidPitchValue(null);
     setWarning("");
   };
 
@@ -186,7 +185,6 @@ const Question = () => {
 
   return (
     <>
-      {/* <h1 style={{padding:"0 0 0 20px"}}>{questions[response]}</h1> */}
 
       <div
         style={{
@@ -207,6 +205,7 @@ const Question = () => {
               <div
                 style={{ marginTop: "10px", color: "red", fontSize: "18px" }}
               >
+                
                 {warning}
               </div>
             )}
@@ -262,20 +261,7 @@ const Question = () => {
               <p>{doneResponse}</p>
             </div>
           </div>
-          {/* <div
-            style={{
-              width: "400px",
-              height: "200px",
-            }}
-          >
-            <PitchDetector
-              handleStartStop={handleStartStop}
-              isListening={isListening}
-              warning={warning}
-              data={data}
-            />
-          </div> */}
-
+          
         </div>
         {/* end of left side */}
 
@@ -285,8 +271,8 @@ const Question = () => {
             borderRadius: "5px",
             width: "450px ",
             overflowY: "scroll",
-            marginTop:"0.5rem",
-            marginBottom:"0.5rem",
+            marginTop: "0.5rem",
+            marginBottom: "0.5rem",
           }}
         >
           {allChat &&
@@ -300,8 +286,8 @@ const Question = () => {
                         color: "black",
                         borderRadius: "10px",
                         padding: "10px 20px",
-                        lineHeight:"3rem",
-                        height:"auto"
+                        lineHeight: "3rem",
+                        height: "auto",
                       }}
                     >
                       {item.question}
