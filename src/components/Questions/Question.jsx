@@ -32,7 +32,6 @@ const Question = () => {
   const analyserRef = useRef(null);
   const microphoneRef = useRef(null);
   const scriptProcessorRef = useRef(null);
-
   const questions = [
     "Tell me about yourself?",
     "Why is the role of Frontend/Backend developer important?",
@@ -250,6 +249,8 @@ const Question = () => {
                 }}
               >
                 <OrbitControls />
+
+                
                 <Avatar
                   position={[0, -1.5, 9]}
                   scale={2}
@@ -296,8 +297,9 @@ const Question = () => {
             scrollbarWidth: "none",
             marginTop: "0.5rem",
             marginBottom: "0.5rem",
+
           }}
-          className="rightContainer"
+          className="rightContainer bg-slate-900 "
         >
           {allChat &&
             allChat.map((item, index) => (
@@ -332,19 +334,18 @@ const Question = () => {
                 <div style={{ display: "flex", justifyContent: "end" }}>
                   {item.response && (
                     <>
-                    <div className="flex gap-2 ">
-                      <span
-                        style={{
-                          textAlign: "right",
-                          backgroundColor: "white",
-                          color: "black",
-                          borderRadius: "10px",
-                          padding: "5px 10px",
-                        }}
-                      >
-                        {item.response}
-
-                      </span>
+                      <div className="flex gap-2 ">
+                        <span
+                          style={{
+                            textAlign: "right",
+                            backgroundColor: "white",
+                            color: "black",
+                            borderRadius: "10px",
+                            padding: "5px 10px",
+                          }}
+                        >
+                          {item.response}
+                        </span>
                         <img
                           src="/user.png"
                           alt="interviewer"

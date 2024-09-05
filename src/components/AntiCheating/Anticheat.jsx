@@ -13,6 +13,7 @@ const Anticheat = () => {
   const webcam = useRef(null);
 
   useEffect(() => {
+    console.log(window.screen.isExtended)
     if (window.screen.isExtended) {
       setIsExtendedScreen(true);
     }
