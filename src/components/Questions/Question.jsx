@@ -7,6 +7,7 @@ import { Avatar } from "../Avatar";
 import { Environment, OrbitControls } from "@react-three/drei";
 import PitchFinder from "pitchfinder";
 import "./ques.css";
+import { useScreenRecorder } from "../../custom/Hooks/useScreenRecorder";
 
 const LOW_PITCH_THRESHOLD = 220;
 
@@ -22,6 +23,8 @@ const Question = () => {
   const [unsupported, setUnsupported] = useState(false);
   const [disable, setDisable] = useState(false);
   const [isFullScreen, setIsFullScreen] = useState(false);
+  const { isRecording, startRecording, stopRecording, getRecording } =
+    useScreenRecorder();
 
   // Pitch detection state
   // const [validPitchValue, setvalidPitchValue] = useState(null);
@@ -82,6 +85,12 @@ const Question = () => {
     }
   };
 
+  // useEffect(()=>{
+  //   if(response == questions.length){
+  //     stopRecording();
+  //   }
+  // },[response])
+
   useEffect(() => {
     const handleFullscreenChange = () => {
       if (!document.fullscreenElement) {
@@ -106,6 +115,10 @@ const Question = () => {
 
     document.addEventListener("fullscreenchange", handleFullscreenChange);
     document.addEventListener("keydown", handleKeyDown);
+
+    if(isRecording){
+      document.documentElement.requestFullscreen();
+    }
 
     return () => {
       document.removeEventListener("fullscreenchange", handleFullscreenChange);
@@ -195,6 +208,7 @@ const Question = () => {
       setResponse(response + 1);
       setNext(true);
     } else {
+      localStorage.setItem('stop',true)
       alert("Thank you for your time. We will get back to you soon.");
     }
   };
@@ -261,7 +275,7 @@ const Question = () => {
               <span style={{ padding: "20px 0 0 0" }}>Interviewer</span>
             </div>
             <div style={{ width: "600px" }}>
-              {response !== questions.length ? (
+              {response !== questions.length-1 ? (
                 <div>
                   <Recorder
                     setDoneResponse={setDoneResponse}

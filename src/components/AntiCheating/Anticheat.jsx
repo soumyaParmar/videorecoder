@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import "./anti.css";
 import { useNavigate } from "react-router-dom";
 import MultipleFaceDetectionComponent from "../temp/Face";
+import { useScreenRecorder } from "../../custom/Hooks/useScreenRecorder";
 // import Facedetection from "../Facedetection/Facedetection";
 
 const Anticheat = () => {
@@ -9,23 +10,29 @@ const Anticheat = () => {
   const [cameraPermission, setCameraPermission] = useState(false);
   const [isFullScreen, setIsFullScreen] = useState(false);
   const [allPermission, setAllPermission] = useState(false);
+  const {startRecording} = useScreenRecorder();
   const router = useNavigate();
   const webcam = useRef(null);
 
   useEffect(() => {
-    console.log(window.screen.isExtended)
-    if (window.screen.isExtended) {
-      setIsExtendedScreen(true);
-    }
-    if (!isExtendedScreen && cameraPermission && isFullScreen) {
+    setInterval(()=>{
+      if (window.screen.isExtended) {
+        setIsExtendedScreen(true);
+      }else{
+        setIsExtendedScreen(false);
+      }
+    },1000)
+    if ( cameraPermission && isFullScreen) { //!isExtendedScreen &&
       setAllPermission(true);
     } else {
       setAllPermission(false);
     }
     getCameraPermission();
+
   }, [isExtendedScreen, cameraPermission, isFullScreen]);
 
   useEffect(() => {
+    startRecording();
     const handleFullscreenChange = () => {
       if (!document.fullscreenElement) {
         alert("The application requires fullscreen mode to operate");
